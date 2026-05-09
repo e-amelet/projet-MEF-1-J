@@ -37,9 +37,11 @@ typedef enum{
 } TypeCase;
 typedef struct{
     int ligne
-    int colonne
-}
+    int colonne      
+}Position;
 
 typedef struct {
-    
-}
+    TypeCase type;
+    int révélé;
+}Case;
+
