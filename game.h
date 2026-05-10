@@ -13,7 +13,7 @@ typedef enum{
     Ranger;
     Mage;
     Voleur;
-}ClassJoueur;
+}ClasseJoueur;
 
 typedef enum{
     Bouclier;
@@ -45,3 +45,35 @@ typedef struct {
     int révélé;
 }Case;
 
+typedef struct{
+    char nom [TAILLE_NOM_MAX];
+    ClasseJoueur id_classe
+    Position depart;
+    Position pos;
+    int a_un_tresor;
+    int a_un_antique;
+    int en_vie;
+    int peut_tp
+    Arme arme;
+}Joueur;
+
+typedef struct{
+    char nom[TAILLE_NOM_MAX];
+    int parties
+    int victoires
+}Stats;
+
+typedef struct{
+    Case plateau[TAILLE_PLATEAU][TAILLE_PLATEAU];
+    Joueur joueurs[JOUEUR_MAX];
+    int nombre_joueur;
+    int gagnant;
+    time_t heure_depart;
+    double duree;
+}Jeux;
+
+void init_joueurs(Jeux *jeux);
+void jouer_jeux(Jeux *jeux);
+void voir_stats();
+void demande_replay();
+#endif
