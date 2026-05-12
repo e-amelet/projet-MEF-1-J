@@ -225,3 +225,4 @@ printf("%d.(%d, %d)\n",i + 1, options[i].ligne, options[i].col);
 
 i = read_int("Choix de la case.:",1, count);
 return options[i-1];
+}
