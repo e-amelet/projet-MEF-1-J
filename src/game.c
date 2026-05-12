@@ -191,3 +191,15 @@ int a_cache_case_adjacente(const Jeux *jeux, Position pos){
     }
     return 0;
 }
+
+static int a_cache_quelquechose(const Jeux *jeux){
+int r, c;
+for(r=0;r<TAILLE_PLATEAU;r++){
+    for (c =0;c<TAILLE_PLATEAU;c++){
+        if (game->board[r][c].revealed ==0){
+            return 1;
+        }
+    }
+    return 0;
+}
+
