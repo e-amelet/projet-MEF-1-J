@@ -112,7 +112,18 @@ void ecrire_plateau(const Jeux *jeux,  int montreTout){
     for (r=0; r<TAILLE_PLATEAU; r++){
         printf("%d ", r);
         for (c=0; c< TAILLE_PLATEAU; c++){
-            if (montreTout || jeu->board[r][c].reveler){
-                printf()
+            if (montreTout || jeu->plateau[r][c].reveler){
+                printf("[%s]", code_case(jeux->plateau[r][c].reveler));
+            } else {
+                printf("[##]");
             }
+        }
+        printf("\n");
+    }
 }
+
+void initier_plateau(Jeux *jeux){
+    TypeCase cases[25];
+    
+}
+
