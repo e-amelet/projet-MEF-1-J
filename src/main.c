@@ -17,7 +17,6 @@ int menu_principal(void) {
 
 int main(){
     int lancer = 1
-    ntm
     srand(time(NULL));
     while(lancer){
         int choix =menu_principal();
