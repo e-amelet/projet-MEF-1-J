@@ -119,11 +119,17 @@ void reveler_plateau(Jeux *jeu){
     }
 }
 
-void ecrire_joueurs(const Jeux *jeux){
+void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle){
     int i;
-    printf("\nJoueurs :\n");
+    printf(GRAS "\nJoueurs :\n"RESET);
     for(i=0; i<jeu->compte_joueur; i++){
-        printf("- %s (%s)\n", jeu->joueurs[i].nom, nom_classe(jeux->joueur[i].id_class));
+        if(i==joueur_actuelle){
+        printf(VERT"> %s (%s)[ENTRAIN DE JOUEUR]\n" RESET, jeu->joueurs[i].nom, nom_classe(jeu->joueur[i].id_class));
+        }else{
+            printf("%s(%s)\n",
+                    jeu->joueurs[i].nom,
+                    nom_classe(jeu->joueur[i].id_class));
+        }
     }
 }
 void ecrire_plateau(const Jeux *jeux,  int montreTout){
