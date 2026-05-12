@@ -73,4 +73,29 @@ void respawn_joueur(Joueur *joueur){
     joueur->arme= BOUCLIER;   
 }
 
-void 
+void melanger (TypeCase cases[], int taille){
+    int i;
+    for(i=size-1;i>0;i--){
+        int j=rand() %(i+1);
+        TypeCase temp=cases[i];
+        cases[i]=cases[j];
+        cases[j]=temp;
+    }
+}
+
+void cache_plateau(Jeux *jeu){
+    int r,c;
+    for (r=0; r<TAILLE_PLATEAU; r++){
+        for (c=0; c< TAILLE_PLATEAU; c++){
+            game*=plateau[r][c].revealed=0;
+        }
+    }
+}
+void reveler_plateau(Jeux *jeu){
+    int r,c;
+    for (r=0; r<TAILLE_PLATEAU; r++){
+        for (c=0; c< TAILLE_PLATEAU; c++){
+            game*=plateau[r][c].revealed=1;
+        }
+    }
+}
