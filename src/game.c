@@ -134,6 +134,7 @@ void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle){
 }
 void ecrire_plateau(const Jeux *jeux,  int montreTout){
     int r,c;
+    printf("\n 0  1  2  3   4\n");
     for (r=0; r<TAILLE_PLATEAU; r++){
         printf("%d ", r);
         for (c=0; c< TAILLE_PLATEAU; c++){
