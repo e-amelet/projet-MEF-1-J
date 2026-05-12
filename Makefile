@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude
 SRC = src/main.c scr/game.c src/utilis.C
 OBJ = $(SRC:.c=.o)
-TARGET = meme_rpg
+TARGET = memo_rpg
 all: $(TARGET)
 
 $(TARGET): $(OBJ)

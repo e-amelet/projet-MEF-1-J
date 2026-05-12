@@ -4,6 +4,25 @@
 #include <time.h>
 #include "game.h" 
 #include "utilis.h"
+#define RESET       "\033[0m"
+#define GRAS        "\033[1m"
+
+#define ROUGE       "\033[31m"
+#define VERT        "\033[32m"
+#define JAUNE       "\033[33m"
+#define BLEU        "\033[34m"
+#define VIOLET      "\033[35m"
+#define CYAN        "\033[36m"
+#define BLANC       "\033[37m"
+
+void ecrire_tour(const Joueur *joueur){
+    printf("\n");
+    printf(BLEU "===============================================\n" RESET);
+    printf(GRAS CYAN "Tour de %s" RESET "(%s)\n"
+           joueur->nom,
+           nom_classe(joueur->id_class));
+    printf(BLUE "===============================================\n"RESET); v
+}
 
 char *nom_classe(ClasseJoueur id_class){
     switch(id_class){
