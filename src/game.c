@@ -87,7 +87,7 @@ void cache_plateau(Jeux *jeu){
     int r,c;
     for (r=0; r<TAILLE_PLATEAU; r++){
         for (c=0; c< TAILLE_PLATEAU; c++){
-            game*=plateau[r][c].revealed=0;
+            game*=plateau[r][c].reveler=0;
         }
     }
 }
@@ -95,7 +95,7 @@ void reveler_plateau(Jeux *jeu){
     int r,c;
     for (r=0; r<TAILLE_PLATEAU; r++){
         for (c=0; c< TAILLE_PLATEAU; c++){
-            game*=plateau[r][c].revealed=1;
+            jeux*=plateau[r][c].reveler=1;
         }
     }
 }
@@ -104,6 +104,15 @@ void ecrire_joueurs(const Jeux *jeux){
     int i;
     printf("\nJoueurs :\n");
     for(i=0; i<jeu->compte_joueur; i++){
-        printf("- %s (%s)\n", game->players[i].name, class_name(game->joueur[i].id_class));
+        printf("- %s (%s)\n", jeu->joueurs[i].nom, nom_classe(jeux->joueur[i].id_class));
     }
+}
+void ecrire_plateau(const Jeux *jeux,  int montreTout){
+    int r,c;
+    for (r=0; r<TAILLE_PLATEAU; r++){
+        printf("%d ", r);
+        for (c=0; c< TAILLE_PLATEAU; c++){
+            if (montreTout || jeu->board[r][c].reveler){
+                printf()
+            }
 }
