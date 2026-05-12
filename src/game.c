@@ -99,3 +99,11 @@ void reveler_plateau(Jeux *jeu){
         }
     }
 }
+
+void ecrire_joueurs(const Jeux *jeux){
+    int i;
+    printf("\nJoueurs :\n");
+    for(i=0; i<jeu->compte_joueur; i++){
+        printf("- %s (%s)\n", game->players[i].name, class_name(game->joueur[i].id_class));
+    }
+}
