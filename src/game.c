@@ -149,6 +149,45 @@ void ecrire_plateau(const Jeux *jeux,  int montreTout){
 
 void initier_plateau(Jeux *jeux){
     TypeCase cases[25];
-    
+    int i=0;
+    int r, c;
+
+    cases[i++]=ANTIQUE_GUERRIER;
+    cases[i++]=ANTIQUE_RANGER;
+    cases[i++]=ANTIQUE_MAGE;
+    cases[i++]= ANTIQUE_VOLEUR;
+
+    cases[i++]= TRESOR;
+    cases[i++]= TRESOR;
+
+    cases[i++]= PORTAIL;
+
+    cases[i++]= TOTEM;
+    cases[i++]= TOTEM;
+
+    cases[i++]= BASILIQUE; cases[i++]= BASILIQUE; cases[i++]= BASILIQUE; cases[i++]= BASILIQUE;
+    cases[i++]= ZOMBIE; cases[i++]= ZOMBIE; cases[i++]= ZOMBIE; cases[i++]= ZOMBIE;
+    cases[i++]= TROLL; cases[i++]= TROLL; cases[i++]= TROLL; cases[i++]= TROLL;
+    cases[i++]= HARPIE; cases[i++]= HARPIE; cases[i++]= HARPIE; cases[i++]= HARPIE;
+
+    melanger(cases, 25);
+    i=0;
+    for (r=0; r<TAILLE_PLATEAU; r++){
+        for (c=0; c< TAILLE_PLATEAU; c++){
+            jeux->plateau[r][c].type=cases[i++];
+            jeux->plateau[r][c].reveler=0;
+        }
+    }
 }
 
+int a_cache_case_adjacente(const Jeux *jeux, Position pos){
+    Position dirs[4]= {{-1,0}, {1,0}, {0,-1}, {0,1}};
+    int i;
+    for (i=0; i<4; i++){
+        Position suivant={pos.ligne +dirs[i].ligne, pos.col+dirs[i].col};
+        if(dedans(suivant) && jeux->plateau[suivant.ligne][suivan.col].reveler==0){
+            return 1;
+        }
+    }
+    return 0;
+}
