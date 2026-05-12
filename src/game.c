@@ -193,7 +193,7 @@ int a_cache_case_adjacente(const Jeux *jeux, Position pos){
     return 0;
 }
 
-static int a_cache_quelquechose(const Jeux *jeux){
+int a_cache_quelquechose(const Jeux *jeux){
 int r, c;
 for(r=0;r<TAILLE_PLATEAU;r++){
     for (c =0;c<TAILLE_PLATEAU;c++){
@@ -204,3 +204,24 @@ for(r=0;r<TAILLE_PLATEAU;r++){
     return 0;
 }
 
+
+Position choix_case_adjacente(const Jeux *jeux, Position pos){
+position dirs[4]={{-1,0},{1,0},{0,-1},{0,1}};
+position options[4];
+int compte = 0;
+int i;
+
+for (i =0; i < 4; i++){
+    Position suivant ={pos.ligne+ dirs[i].ligne, pos.col + dirs[i].col};
+        if (dedans(suivant)&&_jeux->plateau[suivant.ligne][suivant.col].revealed == 0){
+            options[compte++]= suivant;
+        }
+    }
+
+printf("\nCases possibles :\n");
+for (i =0; i< compte; i++){
+printf("%d.(%d, %d)\n",i + 1, options[i].ligne, options[i].col);
+}
+
+i = read_int("Choix de la case.:",1, count);
+return options[i-1];
