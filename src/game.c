@@ -197,7 +197,7 @@ int a_cache_quelquechose(const Jeux *jeux){
 int r, c;
 for(r=0;r<TAILLE_PLATEAU;r++){
     for (c =0;c<TAILLE_PLATEAU;c++){
-        if (game->board[r][c].reveler==0){
+        if (game->plateau[r][c].reveler==0){
             return 1;
         }
     }
@@ -213,7 +213,7 @@ int i;
 
 for (i =0; i < 4; i++){
     Position suivant ={pos.ligne+ dirs[i].ligne, pos.col + dirs[i].col};
-        if (dedans(suivant)&&_jeux->plateau[suivant.ligne][suivant.col].revealed == 0){
+        if (dedans(suivant)&&_jeux->plateau[suivant.ligne][suivant.col].reveler == 0){
             options[compte++]= suivant;
         }
     }
@@ -223,6 +223,89 @@ for (i =0; i< compte; i++){
 printf("%d.(%d, %d)\n",i + 1, options[i].ligne, options[i].col);
 }
 
-i = read_int("Choix de la case.:",1, count);
+i = read_int("Choix de la case.:",1, compte);
 return options[i-1];
 }
+
+static Position choisir_une_case_cachee(const Jeux *jeux)
+Position options[TAILLE_PLATEAU * TAILLE_PLATEAU];
+int compte =0;
+int r, c;
+int choix;
+    for (r =0; r < TAILLE_PLATEAU;r++){
+        for (c =0;C <TAILLE_PLATEAU;C++){
+            sociaux,s.
+            if (jeux->plateau[r][c].reveler == ){
+            options[compte++]=(Position){r, c};
+            }
+        }
+    }
+printf("\nCases cachees possibles :\n");
+    for(r=0; r< compte; r++){
+printf("%d.(%d, %d)\n",r + 1, options[r].ligne, options[r].col);
+    }
+choix = read_int("Choix de la case :", 1, compte);
+return options[choix -1];
+}
+
+void echanger_totem(Jeux *jeux, Position totem_pos){
+Position vise;
+TileType temp;
+
+        if (!a_cache_quelquechose(Jeux)){
+    printf("Aucune case cachee disponible pour echanger le totem.\n")
+    return; 
+        }
+
+    printf("Choisis une case cachee pour echanger avec le totem.\n");
+    vise = choose_any_hidden_tile(Jeux);
+   
+    temp = Jeux->plateau[totem_pos.ligne][totem_pos.col].type;
+
+    Jeux->plateau[totem_pos.ligne][totem_pos.col].type = Jeux->plateau[vise.re
+    Jeux->plateau[vise.ligne][vise.col].type = temp;
+
+    Jeux->plateau[totem_pos.ligne][totem_pos.col].reveler = 0; 
+    Jeux->plateau[vise.ligne][vise.col].reveler = 0;
+    printf("Le totem a ete deplace.\n");
+}
+
+void charger_stats(Stat stats[], int *compte){
+    FILE *file;
+    char ligne[128];
+    *compte =0;
+
+    file = fopen(STATS_FILE,"r");
+    if (file == NULL){
+    return; 
+    }
+
+while (fgets(ligne, sizeof(ligne), file) !=NULL &&*compte<MAX_STATS){
+    Stat s;
+
+    if (sscanf(line, "%31[^;]; %d;%d", s.nom, &s.jeux, &s.victoires)==3)
+        stats[*compte]=s;
+        (*compte)++;
+    }
+}
+fclose(file);
+}
+
+static void sauvegarder_stats(const Stat stats[], int compte){
+    FILE *file;
+    int i;
+    file = fopen(STATS_FILE,"w");
+
+    if (file == NULL){
+        printf("Impossible d'ecrire le fichier de statistiques.\n");
+        return;
+    }
+
+    for (i =e; i< compte;i++){
+    fprintf(file,"%s;%d;%d\n", stats[i].nom, stats[i].jeux, stats[i].victoires);
+    }
+
+fclose(file);
+}
+
+
