@@ -15,24 +15,25 @@
 #define CYAN        "\033[36m"
 #define BLANC       "\033[37m"
 
+
 void ecrire_tour(const Joueur *joueur){
     printf("\n");
     printf(BLEU "===============================================\n" RESET);
-    printf(GRAS CYAN "Tour de %s" RESET "(%s)\n"
+    printf(GRAS CYAN "Tour de %s" RESET " (%s)\n",
            joueur->nom,
-           nom_classe(joueur->id_class));
-    printf(BLUE "===============================================\n"RESET); v
+           nom_classe(joueur->class_id));
+    printf(BLEU "===============================================\n" RESET);
 }
 
-char *nom_classe(ClasseJoueur id_class){
-    switch(id_class){
+char *nom_classe(ClasseJoueur class_id){
+    switch(class_id){
     case GUERRIER: return "Guerrier";
     case RANGER: return "Ranger";
     case MAGE: return "Mage";
     case VOLEUR: return "Voleur";
         default:   return "Inconnue";  
     }
-}
+
 
 char *nom_arme(Arme arme){
     switch(arme){
@@ -75,11 +76,11 @@ int bonne_arme(Arme arme, TypeCase monstre){
           (arme == ARC && monstre == HARPIE);        
 }  
 
-int est_ce_antique(ClasseJoueur id_class, TypeCase case){
-    return (id_class == GUERRIER && case == ANTIQUE_GUERRIER) ||
-    return (id_class == RANGER && case == ANTIQUE_RANGER) ||
-    return (id_class == MAGE && case == ANTIQUE_MAGE)   ||
-    return (id_class == VOLEUR && case == ANTIQUE_VOLEUR);
+int est_ce_antique(ClasseJoueur class_id, TypeCase case){
+    return (class_id == GUERRIER && case == ANTIQUE_GUERRIER) ||
+    return (class_id == RANGER && case == ANTIQUE_RANGER) ||
+    return (class_id == MAGE && case == ANTIQUE_MAGE)   ||
+    return (class_id == VOLEUR && case == ANTIQUE_VOLEUR);
 }
 
 
@@ -87,14 +88,14 @@ void respawn_joueur(Joueur *joueur){
     joueur->pos = joueur->start;
     joueur->avoir_tresor = 0;
     joueur->avoir_antique = 0;
-    joueur-> en_vie = 1;
+    joueur->en_vie = 1;
     joueur-> peut_tp = 1;
     joueur->arme= BOUCLIER;   
 }
 
 void melanger (TypeCase cases[], int taille){
     int i;
-    for(i=size-1;i>0;i--){
+    for(i=taille-1;i>0;i--){
         int j=rand() %(i+1);
         TypeCase temp=cases[i];
         cases[i]=cases[j];
@@ -124,11 +125,11 @@ void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle){
     printf(GRAS "\nJoueurs :\n"RESET);
     for(i=0; i<jeu->compte_joueur; i++){
         if(i==joueur_actuelle){
-        printf(VERT"> %s (%s)[ENTRAIN DE JOUEUR]\n" RESET, jeu->joueurs[i].nom, nom_classe(jeu->joueur[i].id_class));
+        printf(VERT"> %s (%s)[ENTRAIN DE JOUEUR]\n" RESET, jeu->joueurs[i].nom, nom_classe(jeu->joueur[i].class_id));
         }else{
             printf("%s(%s)\n",
                     jeu->joueurs[i].nom,
-                    nom_classe(jeu->joueur[i].id_class));
+                    nom_classe(jeu->joueur[i].class_id));
         }
     }
 }
@@ -280,7 +281,7 @@ void charger_stats(Stat stats[], int *compte){
     return; 
     }
 
-while (fgets(ligne, sizeof(ligne), file) !=NULL &&*compte<MAX_STATS){
+while (fgets(ligne, tailleof(ligne), file) !=NULL &&*compte<MAX_STATS){
     Stat s;
 
     if (sscanf(line, "%31[^;]; %d;%d", s.nom, &s.jeux, &s.victoires)==3)
@@ -355,10 +356,10 @@ void initier_joueurs(jeux *jeux){
     for (i = 0; i<jeux->joueur_compte; i++){
         char prompt[100];
 
-        snprintf(prompt, sizeof(prompt)，"Nom du joueur %d :",i + 1);
+        snprintf(prompt, tailleof(prompt)，"Nom du joueur %d :",i + 1);
         read_text(prompt,jeux->joueurs[i].nom, MAX_NOM);
         
-        jeux->joueurs[i].id_class = (ClasseJoueur)i; 
+        jeux->joueurs[i].class_id = (ClasseJoueur)i; 
         jeux->joueurs[i].start = position_depart(i); 
         reset_joueur(&jeux->joueurs[i]); 
     }
