@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "game.h" 
+#include "jeux.h" 
 #include "utilis.h"
 #define RESET       "\033[0m"
 #define GRAS        "\033[1m"
@@ -75,11 +75,11 @@ int bonne_arme(Arme arme, TypeCase monstre){
           (arme == ARC && monstre == HARPIE);        
 }  
 
-int est_ce_antique(ClasseJoueur id_class, TypeCase tile){
-    return (id_class == GUERRIER && tile == ANTIQUE_GUERRIER) ||
-    return (id_class == RANGER && tile == ANTIQUE_RANGER) ||
-    return (id_class == MAGE && tile == ANTIQUE_MAGE)   ||
-    return (id_class == VOLEUR && tile == ANTIQUE_VOLEUR);
+int est_ce_antique(ClasseJoueur id_class, TypeCase case){
+    return (id_class == GUERRIER && case == ANTIQUE_GUERRIER) ||
+    return (id_class == RANGER && case == ANTIQUE_RANGER) ||
+    return (id_class == MAGE && case == ANTIQUE_MAGE)   ||
+    return (id_class == VOLEUR && case == ANTIQUE_VOLEUR);
 }
 
 
@@ -106,7 +106,7 @@ void cache_plateau(Jeux *jeu){
     int r,c;
     for (r=0; r<TAILLE_PLATEAU; r++){
         for (c=0; c< TAILLE_PLATEAU; c++){
-            game*=plateau[r][c].reveler=0;
+            jeux*=plateau[r][c].reveler=0;
         }
     }
 }
@@ -197,7 +197,7 @@ int a_cache_quelquechose(const Jeux *jeux){
 int r, c;
 for(r=0;r<TAILLE_PLATEAU;r++){
     for (c =0;c<TAILLE_PLATEAU;c++){
-        if (game->plateau[r][c].reveler==0){
+        if (jeux->plateau[r][c].reveler==0){
             return 1;
         }
     }
@@ -250,7 +250,7 @@ return options[choix -1];
 
 void echanger_totem(Jeux *jeux, Position totem_pos){
 Position vise;
-TileType temp;
+caseType temp;
 
         if (!a_cache_quelquechose(Jeux)){
     printf("Aucune case cachee disponible pour echanger le totem.\n")
@@ -258,7 +258,7 @@ TileType temp;
         }
 
     printf("Choisis une case cachee pour echanger avec le totem.\n");
-    vise = choose_any_hidden_tile(Jeux);
+    vise = choisir_une_case_cachee(Jeux);
    
     temp = Jeux->plateau[totem_pos.ligne][totem_pos.col].type;
 
@@ -291,7 +291,7 @@ while (fgets(ligne, sizeof(ligne), file) !=NULL &&*compte<MAX_STATS){
 fclose(file);
 }
 
-static void sauvegarder_stats(const Stat stats[], int compte){
+void sauvegarder_stats(const Stat stats[], int compte){
     FILE *file;
     int i;
     file = fopen(STATS_FILE,"w");
@@ -307,5 +307,198 @@ static void sauvegarder_stats(const Stat stats[], int compte){
 
 fclose(file);
 }
+
+void ajouter_mettre_a_jour_stats(Stat stats[], int *compte, const char *nom.
+    int i;
+
+    for (i= 0; i <*compte;i++){
+        if(strcmp(stats[i].nom, nom)== 0){
+            stats[i].jeux += ajouter_jeu;
+            stats[i].victoires += ajouter_victoire;
+            return;
+        }
+    }
+    
+    if(*compte < MAX_STATS){
+        strncpy(stats[*compte].nom, nom, MAX_NOM -1);
+        stats[*compte].nom[MAX_NOM-1]=\0';
+        stats[*compte].jeux = ajouter_jeu;
+        stats[*compte].victoires = ajouter_victoire;
+        (*compte)++;
+    }
+}
+
+static void maj_date_post_jeux(const Jeux *jeux){
+    Stat stats[MAX_STATS];
+    int compte = 0;
+    int i;
+
+    charger_stats(stats,&compte);
+    
+    for (i = 0; i < jeux->joueur_compte; i++) {
+        ajouter_mettre_a_jour_stats(stats,&compte, jeux->joueurs[i].nom, 1, 0);
+    }
+    
+    if(jeux->gagnant >= 0){
+        ajouter_mettre_a_jour_stats(stats,&compte, jeux->joueurs[jeux->gagnant].nom);
+    }
+    sauvegarder_stats(stats, compte);
+}
+
+
+
+void initier_joueurs(jeux *jeux){ 
+    int i;
+    
+    jeux->joueur_compte = lire_int("Nombre de joueurs (2 a 4):", 2, 4);
+    
+    for (i = 0; i<jeux->joueur_compte; i++){
+        char prompt[100];
+
+        snprintf(prompt, sizeof(prompt)，"Nom du joueur %d :",i + 1);
+        read_text(prompt,jeux->joueurs[i].nom, MAX_NOM);
+        
+        jeux->joueurs[i].id_class = (ClasseJoueur)i; 
+        jeux->joueurs[i].start = position_depart(i); 
+        reset_joueur(&jeux->joueurs[i]); 
+    }
+}
+
+void montrer_stats(void){
+    Stat stats[MAX_STATS];
+    int compte = 0;
+    int i;
+
+    load_stats(stats, &compte);
+    printf("\n=== STATISTIQUES ===\n");
+    if (compte==0){
+        printf("Aucune statistique enregistree.\n");
+        return;
+    }
+    
+    for (i =0; i < compte; i++){
+        printf("- %s :%d partie(s), %d victoire(s)\n",stats[i].nom, stats[i].jeux, stats[i].victoire);
+    }
+}
+
+
+int ask_replay(void){
+    return read_int("\n1. Rejouer avec les memes joueurs\n" 
+        "2. Retour au menu principal\n" "Choix:",1, 2); 
+    }
+
+
+void jouer_jeux(Jeux *jeux){
+    int i;
+    
+    init_plateau(jeux);
+    jeux->gagnant =-1;
+    jeux->heure_debut = time(NULL);
+    
+    while (jeux->gagnant ==-1){
+        for (i=0; i < jeux->compte_joueur;i++){
+            Joueur *joueur = &jeux->joueurs[i];
+            int tour_termine = 0;
+            reset_joueur(joueur);
+            printf("\n=================================\n");
+            printf("Tour de %s (%s)\n",joueur->nom, nom_classe(joueur->class_id)l
+            printf("=================================\n");
+            
+            while (!tour_termine && jeux->gagnant == -1) { 
+                Position choisi;
+                TypeCase case;
+                
+                ecrire_joueurs(jeux);
+                ecrire_plateau(jeux, 0);
+                
+                printf("\nEtat du joueur : coffre=%s, arme antique=%s\n", 
+                    joueur->avoir_tresor ?"oui":"non", 
+                    joueur->avoir_antique ？"oui":"non"); 
+                    
+            if (joueur->peut_tp){
+                if (!a_cache_quelquechose(jeux)){ 
+                    printf("Plus aucune case cachee. Fin du tour.\n");
+                    tour_termine = 1;
+                    break;
+                }
+            printf("Portail actif : tu peux choisir n'importe quelle case");
+        else {
+            if (!a_cache_case_adjacente(jeux, joueur->pos)) {
+                printf("Aucune case cachee autour de toi. Tu es bloque.\n");
+                tour_termine = 1;
+                break;
+            }
+    
+        joueur-> =(Arme)(read_int("\nChoisis ton arme :\n" "1. Bouclier\n" 
+                            "2. Torche\n" "3. Hache\n" "4.Arc\n" "choix: ", 1,4) -1);
+                            
+        printf("Arme choisie : %s\n", nom_arme(joueur->arme));
+        
+        if (joueur->peut_tp){
+            choisi = a_cache_quelquechose(jeux);
+            joueur->peut_tp = 0;
+        } else {
+            choisi = choix_case_adjacente(jeux, joueur->pos);
+        }
+        
+        jeux->plateau[choisi.ligne][choisi.col].reveler = 1;
+        joueur->pos = choisi;
+        case = jeux->plateau[choisi.ligne][choisi.col].type;
+        
+        if (est_monstre(case)){
+            if (bonne_arme(joueur->arme, case)){
+                printf("Bonne arme : monstre vaincu.\n");
+            } else {
+                printf("Mauvaise arme : %s meurt.\n", joueur->nom);
+                joueur->en_vie = 0;
+                tour_termine = 1;
+            }
+         
+        } else if (case == TRESOR){
+            printf("Bravo : tu as trouve un coffre.\n");
+            joueur->avoir_tresor = 1;
+
+        } else if (case == PORTAIL){
+            printf("Portail trouve : le prochain deplacement sera libre.\n");
+            joueur->peut_tp = 1;
+
+        } else if (case == TOTEM){
+            printf("Totem de transmutation : fin du tour.\n");
+            echanger_totem(jeux, choisi);
+            tour_termine = 1;
+            
+        } else {
+            if (est_ce_antique(joueur->class_id, case)){
+                printf("Bravo : tu as trouve ton arme antique.\n");
+                joueur->avoir_antique =1;
+
+            else {
+                printf("Tu as trouve une arme antique, mais pas la tienne.");
+            }
+        }
+        
+        if (joueur->avoir_tresor && joueur->avoir_antique){
+            jeux->gagnant = i;
+            break;
+        }
+    }
+    
+        if(jeux->gagnant != -1){
+         break;
+        }
+
+        cache_plateau(jeux);
+        printf("\nFin du tour de %s.\n", joueur->nom);
+    }
+}
+jeux->duree = difftime(time(NULL), jeux->start_time);
+reveler_plateau(jeux);
+
+printf("\n=========== FIN DE PARTIE ===========\n");
+printf("Vainqueur : %s\n", jeux->joueurs[jeux->gagnant].nom);
+printf("Duree : %.0f seconde(s)\n", jeux->duree);
+print_plateau(jeux, 1);
+
+update_stats_after_jeux(jeux); }
 
 
