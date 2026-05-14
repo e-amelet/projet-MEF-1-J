@@ -3,6 +3,7 @@
 #include <time.h>
 #include "game.h"
 #include "utils.h"
+#include <locale.h>
 
 int menu_principal(void) {
     return lire_entier(
@@ -16,6 +17,7 @@ int menu_principal(void) {
 }
 
 int main(){
+setlocale(LC_ALL, "");
     int lancer = 1
     srand(time(NULL));
     while(lancer){

@@ -16,12 +16,13 @@
 #define BLANC       "\033[37m"
 
 
-void ecrire_tour(const Joueur *joueur){
+void ecrire_tour(const Joueur *joueur) {
     printf("\n");
     printf(BLEU "===============================================\n" RESET);
-    printf(GRAS CYAN "Tour de %s" RESET " (%s)\n",
+    printf(GRAS CYAN "Tour de %s %s" RESET " (%s)\n",
+           emoji_classe(joueur->id_class),
            joueur->nom,
-           nom_classe(joueur->class_id));
+           nom_classe(joueur->id_class));
     printf(BLEU "===============================================\n" RESET);
 }
 
@@ -35,6 +36,21 @@ char *nom_classe(ClasseJoueur class_id){
     }
 
 
+const char *emoji_classe(ClasseJoueur id_class) {
+    static const char *emojis[] = {
+        "🛡️",  
+        "🌿",  
+        "🧙",  
+        "🥷"   
+    };
+
+    if (id_class < GUERRIER || id_class > VOLEUR) {
+        return "❔";
+    }
+
+    return emojis[id_class];
+}
+
 char *nom_arme(Arme arme){
     switch(arme){
     case BOUCLIER: return "Bouclier";
@@ -43,24 +59,70 @@ char *nom_arme(Arme arme){
     case ARC:     return "Arc";
     default: return"Inconnu";
     }
-}
-char code_case(TypeCase type){
-    switch(type){
-    case BASILIQUE:             return "BAS";
-    case ZOMBIE:                return "ZOMB" ;
-    case TROLL:                 return "TROL";
-    case HARPIE:                return "HARP";
-    case TRESOR:                return "TRS";
-    case PORTAIL:               return "PORT";
-    case TOTEM:                 return "TOT";
-    case ANTIQUE_GUERRIER:      return "A_G";
-    case ANTIQUE_RANGER:        return "A_R";
-    case ANTIQUE_MAGE:          return "A_M";
-    case ANTIQUE_VOLEUR:        return "A_V";
-    default:                    return "??";
+
+const char *emoji_arme(Arme arme) {
+    static const char *emojis[] = {
+        "🛡️",  
+        "🔦",  
+        "🪓",  
+        "🏹"   
+    };
+
+    if (arme < BOUCLIER || arme > ARC) {
+        return "❔";
     }
+
+    return emojis[arme];
 }
 
+}
+const char *code_case(TypeCase type) {
+    static const char *emojis[] = {
+        "🐍",  
+        "🧟", 
+        "👹",  
+        "🦅",  
+        "💰",  
+        "🌀",  
+        "🗿",  
+        "🔥",  
+        "🪄",  
+        "📖",  
+        "🗡️"   
+    };
+
+    if (type < BASILIQUE || type > ANTIQUE_VOLEUR) {
+        return "❔";
+    }
+
+    return emojis[type];
+
+const char *couleur_case(TypeCase type) {
+    if (type == TRESOR) {
+        return VERT;
+    }
+
+    if (type == PORTAIL || type == TOTEM) {
+        return JAUNE;
+    }
+
+    if (type == ANTIQUE_GUERRIER ||
+        type == ANTIQUE_RANGER ||
+        type == ANTIQUE_MAGE ||
+        type == ANTIQUE_VOLEUR) {
+        return VIOLET;
+    }
+
+    if (type == BASILIQUE ||
+        type == ZOMBIE ||
+        type == TROLL ||
+        type == HARPIE) {
+        return ROUGE;
+    }
+
+    return BLANC;
+}
+}
 int dedans(Position p){
     return p.ligne >= 0 && p.ligne < TAILLE_PLATEAU && p.col>= 0 && p.col < TAILLE_PLATEAU;
 }
@@ -120,8 +182,9 @@ void reveler_plateau(Jeux *jeu){
     }
 }
 
-void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle){
+void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle) {
     int i;
+<<<<<<< HEAD
     printf(GRAS "\nJoueurs :\n"RESET);
     for(i=0; i<jeu->compte_joueur; i++){
         if(i==joueur_actuelle){
@@ -130,23 +193,56 @@ void ecrire_joueurs(const Jeux *jeux, int joueur_actuelle){
             printf("%s(%s)\n",
                     jeu->joueurs[i].nom,
                     nom_classe(jeu->joueur[i].class_id));
+=======
+
+    printf(GRAS "\nJoueurs :\n" RESET);
+
+    for (i = 0; i < jeux->compte_joueur; i++) {
+        if (i == joueur_actuelle) {
+            printf(VERT "> %s %s (%s) [EN TRAIN DE JOUER]\n" RESET,
+                   emoji_classe(jeux->joueurs[i].id_class),
+                   jeux->joueurs[i].nom,
+                   nom_classe(jeux->joueurs[i].id_class));
+        } else {
+            printf("  %s %s (%s)\n",
+                   emoji_classe(jeux->joueurs[i].id_class),
+                   jeux->joueurs[i].nom,
+                   nom_classe(jeux->joueurs[i].id_class));
+>>>>>>> 22ff48b (modification game.c)
         }
     }
 }
-void ecrire_plateau(const Jeux *jeux,  int montreTout){
-    int r,c;
-    printf("\n 0  1  2  3   4\n");
-    for (r=0; r<TAILLE_PLATEAU; r++){
-        printf("%d ", r);
-        for (c=0; c< TAILLE_PLATEAU; c++){
-            if (montreTout || jeu->plateau[r][c].reveler){
-                printf("[%s]", code_case(jeux->plateau[r][c].reveler));
+
+void ecrire_plateau(const Jeux *jeux, const Joueur *joueur, int tout_montrer) {
+    int r;
+    int c;
+
+    printf(GRAS "\nPlateau :\n" RESET);
+    printf("     0    1    2    3    4\n");
+
+    for (r = 0; r < TAILLE_PLATEAU; r++) {
+        printf("%d  ", r);
+
+        for (c = 0; c < TAILLE_PLATEAU; c++) {
+            if (joueur->pos.ligne == r && joueur->pos.col == c) {
+                printf(CYAN " 🧍 " RESET);
+            } else if (tout_montrer || jeux->plateau[r][c].reveler) {
+                TypeCase type = jeux->plateau[r][c].type;
+                printf("%s %s " RESET, couleur_case(type), code_case(type));
             } else {
-                printf("[##]");
+                printf(BLANC " ❓ " RESET);
             }
         }
+
         printf("\n");
     }
+}
+
+void ecrire_legende(void) {
+    printf("\nLegende :\n");
+    printf("❓ cachee | 🧍 joueur | 🐍 basilique | 🧟 zombie | 👹 troll | 🦅 harpie\n");
+    printf("💰 tresor | 🌀 portail | 🗿 totem | 🔥 guerrier | 🪄 ranger | 📖 mage | 🗡️ voleur\n");
+    printf("🛡️ bouclier | 🔦 torche | 🪓 hache | 🏹 arc\n");
 }
 
 void initier_plateau(Jeux *jeux){
@@ -227,6 +323,7 @@ printf("%d.(%d, %d)\n",i + 1, options[i].ligne, options[i].col);
 i = read_int("Choix de la case.:",1, compte);
 return options[i-1];
 }
+
 
 static Position choisir_une_case_cachee(const Jeux *jeux)
 Position options[TAILLE_PLATEAU * TAILLE_PLATEAU];
@@ -401,16 +498,14 @@ void jouer_jeux(Jeux *jeux){
             Joueur *joueur = &jeux->joueurs[i];
             int tour_termine = 0;
             reset_joueur(joueur);
-            printf("\n=================================\n");
-            printf("Tour de %s (%s)\n",joueur->nom, nom_classe(joueur->class_id)l
-            printf("=================================\n");
-            
+            ecrire_tour(joueur);
             while (!tour_termine && jeux->gagnant == -1) { 
                 Position choisi;
                 TypeCase case;
                 
-                ecrire_joueurs(jeux);
-                ecrire_plateau(jeux, 0);
+                    ecrire_joueurs(jeux, i);
+                    ecrire_plateau(jeux, joueur, 0);
+                    ecrire_legende();
                 
                 printf("\nEtat du joueur : coffre=%s, arme antique=%s\n", 
                     joueur->avoir_tresor ?"oui":"non", 
@@ -430,10 +525,19 @@ void jouer_jeux(Jeux *jeux){
                 break;
             }
     
-        joueur-> =(Arme)(read_int("\nChoisis ton arme :\n" "1. Bouclier\n" 
-                            "2. Torche\n" "3. Hache\n" "4.Arc\n" "choix: ", 1,4) -1);
+                joueur->arme = (Arme)(read_int(
+        "\nChoisis ton arme :\n"
+        "1. 🛡️ Bouclier\n"
+        "2. 🔦 Torche\n"
+        "3. 🪓 Hache\n"
+        "4. 🏹 Arc\n"
+        "Choix : ",
+         1, 4
+        ) - 1);
                             
-        printf("Arme choisie : %s\n", nom_arme(joueur->arme));
+       printf(CYAN "Arme choisie : %s %s\n" RESET,
+       emoji_arme(joueur->arme),
+       nom_arme(joueur->arme));
         
         if (joueur->peut_tp){
             choisi = a_cache_quelquechose(jeux);
@@ -444,33 +548,42 @@ void jouer_jeux(Jeux *jeux){
         
         jeux->plateau[choisi.ligne][choisi.col].reveler = 1;
         joueur->pos = choisi;
-        case = jeux->plateau[choisi.ligne][choisi.col].type;
-        
+        type_case = jeux->plateau[choisi.ligne][choisi.col].type;
+        printf(CYAN "\n%s se deplace vers (%d, %d).\n" RESET,
+        joueur->nom,
+        choisi.ligne,
+        choisi.col);
+
+        printf("Case revelee : %s%s%s\n",
+        couleur_case(type_case),
+        code_case(type_case),
+        RESET);
         if (est_monstre(case)){
             if (bonne_arme(joueur->arme, case)){
-                printf("Bonne arme : monstre vaincu.\n");
+                printf(VERT "Bonne arme : monstre vaincu.\n" RESET);
             } else {
-                printf("Mauvaise arme : %s meurt.\n", joueur->nom);
+               printf(ROUGE "Mauvaise arme : %s est vaincu.\n" RESET, joueur->nom);
                 joueur->en_vie = 0;
                 tour_termine = 1;
             }
          
         } else if (case == TRESOR){
-            printf("Bravo : tu as trouve un coffre.\n");
+           printf(VERT "Bravo : tu as trouve un coffre 💰.\n" RESET);
             joueur->avoir_tresor = 1;
 
         } else if (case == PORTAIL){
-            printf("Portail trouve : le prochain deplacement sera libre.\n");
+           printf(JAUNE "Portail trouve 🌀 : le prochain deplacement sera libre.\n" RESET);
             joueur->peut_tp = 1;
 
         } else if (case == TOTEM){
-            printf("Totem de transmutation : fin du tour.\n");
+            printf(JAUNE "Totem de transmutation 🗿 : fin du tour.\n" RESET);
             echanger_totem(jeux, choisi);
             tour_termine = 1;
             
         } else {
             if (est_ce_antique(joueur->class_id, case)){
-                printf("Bravo : tu as trouve ton arme antique.\n");
+                printf(VERT "Bravo : tu as trouve ton arme antique %s.\n" RESET,
+                code_case(type_case));
                 joueur->avoir_antique =1;
 
             else {
@@ -495,11 +608,16 @@ void jouer_jeux(Jeux *jeux){
 jeux->duree = difftime(time(NULL), jeux->start_time);
 reveler_plateau(jeux);
 
-printf("\n=========== FIN DE PARTIE ===========\n");
-printf("Vainqueur : %s\n", jeux->joueurs[jeux->gagnant].nom);
+printf(GRAS VERT "\n=========== FIN DE PARTIE ===========\n" RESET);
+printf("Vainqueur : %s %s\n",
+       emoji_classe(jeux->joueurs[jeux->gagnant].id_class),
+       jeux->joueurs[jeux->gagnant].nom);
 printf("Duree : %.0f seconde(s)\n", jeux->duree);
-print_plateau(jeux, 1);
+
+ecrire_plateau(jeux, &jeux->joueurs[jeux->gagnant], 1);
+ecrire_legende();
 
 update_stats_after_jeux(jeux); }
+
 
 
