@@ -18,22 +18,22 @@ int menu_principal(void) {
 
 int main(){
 setlocale(LC_ALL, "");
-    int lancer = 1
+    int lancer = 1;
     srand(time(NULL));
     while(lancer){
         int choix =menu_principal();
         if(choix==1){
             Jeux jeux;
-            int rejouer;
+            int replay;
 
 
-            init_joueur(&jeux);
+            init_joueurs(&jeux);
             do{
-                jouer_jeux(&jeux)
+                jouer_jeux(&jeux);
                 replay=demande_replay();
             }while(replay==1);
         }else if (choix==2){
-            montre_stats();
+                voir_stats();
         }else{
             printf("au revoir.\n");
             lancer = 0;

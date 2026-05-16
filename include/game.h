@@ -8,59 +8,60 @@
 #define STATS_MAX 200
 #define STATS_FILE "Stats_joueurs.txt"
 
-typedef enum{
-    Guerrier;
-    Ranger;
-    Mage;
-    Voleur;
-}ClasseJoueur;
+typedef enum {
+    GUERRIER,
+    RANGER,
+    MAGE,
+    VOLEUR
+} ClasseJoueur;
 
-typedef enum{
-    Bouclier;
-    Torche;
-    Hache;
-    Arc;
-}Arme;
+typedef enum {
+    BOUCLIER,
+    TORCHE,
+    HACHE,
+    ARC
+} Arme;
 
-typedef enum{
-    Basilic;
-    Zombie;
-    Troll;
-    Harpie;
-    Trésor;
-    Portail ;
-    Totem;
-    Antique_Guerrier;
-    Antique_Ranger;
-    Antique_Mage;
-    Antique_Voleur;
+typedef enum {
+    BASILIC,
+    ZOMBIE,
+    TROLL,
+    HARPIE,
+    TRESOR,
+    PORTAIL,
+    TOTEM,
+    ANTIQUE_GUERRIER,
+    ANTIQUE_RANGER,
+    ANTIQUE_MAGE,
+    ANTIQUE_VOLEUR
 } TypeCase;
+
 typedef struct{
-    int ligne
-    int colonne      
+    int ligne;
+    int col;      
 }Position;
 
 typedef struct {
     TypeCase type;
-    int révélé;
+    int revele;
 }Case;
 
-typedef struct{
-    char nom [TAILLE_NOM_MAX];
-    ClasseJoueur id_classe
+typedef struct {
+    char nom[TAILLE_NOM_MAX];
+    ClasseJoueur id_class;
     Position depart;
     Position pos;
     int a_un_tresor;
     int a_un_antique;
     int en_vie;
-    int peut_tp
+    int peut_tp;
     Arme arme;
 }Joueur;
 
 typedef struct{
     char nom[TAILLE_NOM_MAX];
-    int parties
-    int victoires
+    int parties;
+    int victoires;
 }Stats;
 
 typedef struct{
@@ -75,5 +76,5 @@ typedef struct{
 void init_joueurs(Jeux *jeux);
 void jouer_jeux(Jeux *jeux);
 void voir_stats();
-void demande_replay();
+int demande_replay();
 #endif
