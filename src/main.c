@@ -6,7 +6,7 @@
 #include <locale.h>
 
 int menu_principal(void) {
-    return lire_entier(
+    return read_int(
         "\n=== MEMO-RPG ===\n"
         "1. Nouvelle partie\n"
         "2. Voir les statistiques\n"
@@ -33,7 +33,7 @@ setlocale(LC_ALL, "");
                 replay=demande_replay();
             }while(replay==1);
         }else if (choix==2){
-                voir_stats();
+                montrer_stats();
         }else{
             printf("au revoir.\n");
             lancer = 0;
