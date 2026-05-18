@@ -14,6 +14,13 @@
 #define VIOLET      "\033[35m"
 #define CYAN        "\033[36m"
 #define BLANC       "\033[37m"
+#ifndef MAX_STATS
+#define MAX_STATS 200
+#endif
+
+#ifndef MAX_NOM
+#define MAX_NOM 32
+#endif
 
 const char *nom_classe(ClasseJoueur id_class);
 const char *emoji_classe(ClasseJoueur id_class);
@@ -98,17 +105,17 @@ const char *emoji_arme(Arme arme) {
 
 const char *code_case(TypeCase type) {
     static const char *emojis[] = {
-        "🐍",  
-        "🧟", 
-        "👹",  
-        "🦅",  
-        "💰",  
-        "🌀",  
-        "🗿",  
-        "🔥",  
-        "🪄",  
-        "📖",  
-        "🗡️"   
+        "🐍",
+        "🧟",
+        "👹",
+        "🦅",
+        "💰",
+        "🌀",
+        "🗿",
+        "🔥",
+        "🪄",
+        "📖",
+        "🗡️"
     };
 
     if (type < BASILIC || type > ANTIQUE_VOLEUR) {
@@ -116,6 +123,7 @@ const char *code_case(TypeCase type) {
     }
 
     return emojis[type];
+}
 
 const char *couleur_case(TypeCase type) {
     if (type == TRESOR) {
@@ -142,7 +150,7 @@ const char *couleur_case(TypeCase type) {
 
     return BLANC;
 }
-}
+
 int dedans(Position p){
     return p.ligne >= 0 && p.ligne < TAILLE_PLATEAU && p.col>= 0 && p.col < TAILLE_PLATEAU;
 }
@@ -303,14 +311,18 @@ int a_cache_case_adjacente(const Jeux *jeux, Position pos){
     return 0;
 }
 
-int a_cache_quelquechose(const Jeux *jeux){
-int r, c;
-for(r=0;r<TAILLE_PLATEAU;r++){
-    for (c =0;c<TAILLE_PLATEAU;c++){
-        if (jeux->plateau[r][c].revele==0){
-            return 1;
+int a_cache_quelquechose(const Jeux *jeux) {
+    int r;
+    int c;
+
+    for (r = 0; r < TAILLE_PLATEAU; r++) {
+        for (c = 0; c < TAILLE_PLATEAU; c++) {
+            if (jeux->plateau[r][c].revele == 0) {
+                return 1;
+            }
         }
     }
+
     return 0;
 }
 
@@ -489,6 +501,21 @@ void maj_date_post_jeux(const Jeux *jeux) {
     sauvegarder_stats(stats, compte);
 }
 
+Position position_depart(int index) {
+    switch (index) {
+        case 0:
+            return (Position){-1, 2};
+        case 1:
+            return (Position){2, 5};
+        case 2:
+            return (Position){5, 2};
+        case 3:
+            return (Position){2, -1};
+        default:
+            return (Position){-1, 2};
+    }
+}
+
 void init_joueurs(Jeux *jeux) {
     int i;
 
@@ -539,12 +566,6 @@ int demande_replay(void) {
         2
     );
 }
-
-    if (choix == 1) {
-        return 1;
-    }
-
-    return 0;
 
 
 void jouer_jeux(Jeux *jeux) {
