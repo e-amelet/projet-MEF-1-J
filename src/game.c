@@ -15,6 +15,14 @@
 #define CYAN        "\033[36m"
 #define BLANC       "\033[37m"
 
+const char *nom_classe(ClasseJoueur id_class);
+const char *emoji_classe(ClasseJoueur id_class);
+const char *nom_arme(Arme arme);
+const char *emoji_arme(Arme arme);
+const char *code_case(TypeCase type);
+const char *couleur_case(TypeCase type);
+
+Position choisir_une_case_cachee(const Jeux *jeux);
 
 void ecrire_tour(const Joueur *joueur) {
     printf("\n");
@@ -26,15 +34,20 @@ void ecrire_tour(const Joueur *joueur) {
     printf(BLEU "===============================================\n" RESET);
 }
 
-char *nom_classe(ClasseJoueur class_id){
-    switch(class_id){
-    case GUERRIER: return "Guerrier";
-    case RANGER: return "Ranger";
-    case MAGE: return "Mage";
-    case VOLEUR: return "Voleur";
-        default:   return "Inconnue";  
-        }
+const char *nom_classe(ClasseJoueur id_class) {
+    switch (id_class) {
+        case GUERRIER:
+        return "Guerrier";
+        case RANGER:
+        return "Ranger";
+        case MAGE:
+        return "Mage";
+        case VOLEUR:
+        return "Voleur";
+        default:
+        return "Inconnue";
     }
+}
 
 
 const char *emoji_classe(ClasseJoueur id_class) {
@@ -52,14 +65,20 @@ const char *emoji_classe(ClasseJoueur id_class) {
     return emojis[id_class];
 }
 
-char *nom_arme(Arme arme){
-    switch(arme){
-    case BOUCLIER: return "Bouclier";
-    case TORCHE:  return"torche";
-    case HACHE:   return"Hache";
-    case ARC:     return "Arc";
-    default: return"Inconnu";
+const char *nom_arme(Arme arme) {
+    switch (arme) {
+        case BOUCLIER:
+        return "Bouclier";
+        case TORCHE:
+        return "Torche";
+        case HACHE:
+        return "Hache";
+        case ARC:
+        return "Arc";
+        default:
+        return "Inconnue";
     }
+}
 
 const char *emoji_arme(Arme arme) {
     static const char *emojis[] = {
@@ -152,7 +171,7 @@ void respawn_joueur(Joueur *joueur){
     joueur->a_un_tresor = 0;
     joueur->a_un_antique = 0;
     joueur->en_vie = 1;
-    joueur-> peut_tp = 1;
+    joueur-> peut_tp = 0;
     joueur->arme= BOUCLIER;   
 }
 
@@ -169,7 +188,7 @@ void melanger (TypeCase cases[], int taille){
 void cache_plateau(Jeux *jeu){
     int r,c;
     for (r=0; r<TAILLE_PLATEAU; r++){
-        for (c=0; c< TAILLE_PLATEAU; c++){
+        for (c=0; c < TAILLE_PLATEAU; c++){
             jeux->plateau[r][c].revele= 0;
         }
     }
@@ -337,7 +356,7 @@ return options[choix -1];
 
 void echanger_totem(Jeux *jeux, Position totem_pos){
 Position vise;
-caseType temp;
+TypeCase temp;
 
         if (!a_cache_quelquechose(Jeux)){
     printf("Aucune case cachee disponible pour echanger le totem.\n")
@@ -367,7 +386,7 @@ void charger_stats(Stats stats[], int *compte){
     return; 
     }
 
-while (fgets(ligne, tailleof(ligne), file) !=NULL &&*compte<STATS_MAX){
+while (fgets(ligne, sizeof(ligne), file) !=NULL &&*compte<STATS_MAX){
     Stats s;
 
     if (sscanf(line, "%31[^;]; %d;%d", s.nom, &s.jeux, &s.victoires)==3)
@@ -442,7 +461,7 @@ void init_joueurs(jeux *jeux){
     for (i = 0; i<jeux->nombre_joueur; i++){
         char prompt[100];
 
-        snprintf(prompt, tailleof(prompt)，"Nom du joueur %d :",i + 1);
+        snprintf(prompt, sizeof(prompt)，"Nom du joueur %d :",i + 1);
         read_text(prompt,jeux->joueurs[i].nom, MAX_NOM);
         
         jeux->joueurs[i].class_id = (ClasseJoueur)i; 
