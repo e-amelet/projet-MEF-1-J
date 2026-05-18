@@ -75,6 +75,6 @@ typedef struct{
 
 void init_joueurs(Jeux *jeux);
 void jouer_jeux(Jeux *jeux);
-void voir_stats();
+void montrer_stats();
 int demande_replay();
 #endif

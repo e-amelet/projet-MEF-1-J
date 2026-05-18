@@ -1,6 +1,7 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef UTILIS_H
+#define UTILIS_H
 
-int lire_entier(char *prompt, int min, int max);
-void lire_texte(char *prompt, char *buffer, int taille);
+int read_int(const char *prompt, int min, int max);
+void read_text(const char *prompt, char *buffer, int size);
+
 #endif
