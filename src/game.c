@@ -333,7 +333,7 @@ for (i =0; i< compte; i++){
 printf("%d.(%d, %d)\n",i + 1, options[i].ligne, options[i].col);
 }
 
-i = lire_entier("Choix de la case.:",1, compte);
+i = read_int("Choix de la case.:",1, compte);
 return options[i-1];
 }
 
@@ -362,7 +362,7 @@ Position choisir_une_case_cachee(const Jeux *jeux) {
                options[r].col);
     }
 
-    choix = lire_entier("Choix de la case : ", 1, compte);
+    choix = read_int("Choix de la case : ", 1, compte);
 
     return options[choix - 1];
 }
@@ -385,8 +385,8 @@ void echanger_totem(Jeux *jeux, Position totem_pos) {
         jeux->plateau[vise.ligne][vise.col].type;
     jeux->plateau[vise.ligne][vise.col].type = temp;
 
-    jeux->plateau[totem_pos.ligne][totem_pos.col].reveler = 0;
-    jeux->plateau[vise.ligne][vise.col].reveler = 0;
+    jeux->plateau[totem_pos.ligne][totem_pos.col].revele = 0;
+    jeux->plateau[vise.ligne][vise.col].revele = 0;
 
     printf(JAUNE "Le totem a ete deplace.\n" RESET);
 }
@@ -470,12 +470,12 @@ void maj_date_post_jeux(const Jeux *jeux) {
 
     charger_stats(stats, &compte);
 
-    for (i = 0; i < jeux->compte_joueur; i++) {
+    for (i = 0; i < jeux->nombre_joueur; i++) {
         ajouter_mettre_a_jour_stats(stats,
-        &compte,
-        jeux->joueurs[i].nom,
-        1,
-        0);
+                                    &compte,
+                                    jeux->joueurs[i].nom,
+                                    1,
+                                    0);
     }
 
     if (jeux->gagnant >= 0) {
@@ -489,20 +489,19 @@ void maj_date_post_jeux(const Jeux *jeux) {
     sauvegarder_stats(stats, compte);
 }
 
-
-void initier_joueurs(Jeux *jeux) {
+void init_joueurs(Jeux *jeux) {
     int i;
 
-    jeux->compte_joueur = read_int("Nombre de joueurs (2 a 4) : ", 2, 4);
+    jeux->nombre_joueur = read_int("Nombre de joueurs (2 a 4) : ", 2, 4);
 
-    for (i = 0; i < jeux->compte_joueur; i++) {
+    for (i = 0; i < jeux->nombre_joueur; i++) {
         char prompt[100];
 
         snprintf(prompt, sizeof(prompt), "Nom du joueur %d : ", i + 1);
         read_text(prompt, jeux->joueurs[i].nom, MAX_NOM);
 
         jeux->joueurs[i].id_class = (ClasseJoueur)i;
-        jeux->joueurs[i].start = position_depart(i);
+        jeux->joueurs[i].depart = position_depart(i);
 
         respawn_joueur(&jeux->joueurs[i]);
     }
@@ -531,17 +530,15 @@ void montrer_stats(void) {
 }
 
 
-int demande_replay(void)
-{
-    int choix;
-
-    choix = lire_entier(
+int demande_replay(void) {
+    return read_int(
         "\n1. Rejouer avec les memes joueurs\n"
         "2. Retour au menu principal\n"
         "Choix : ",
         1,
         2
     );
+}
 
     if (choix == 1) {
         return 1;
@@ -556,10 +553,10 @@ void jouer_jeux(Jeux *jeux) {
     initier_plateau(jeux);
 
     jeux->gagnant = -1;
-    jeux->heure_debut = time(NULL);
+    jeux->heure_depart = time(NULL);
 
     while (jeux->gagnant == -1) {
-        for (i = 0; i < jeux->compte_joueur; i++) {
+        for (i = 0; i < jeux->nombre_joueur; i++) {
             Joueur *joueur = &jeux->joueurs[i];
             int tour_termine = 0;
 
@@ -575,8 +572,8 @@ void jouer_jeux(Jeux *jeux) {
                 ecrire_legende();
 
                 printf("\nEtat du joueur : coffre=%s, arme antique=%s\n",
-                       joueur->avoir_tresor ? "oui" : "non",
-                       joueur->avoir_antique ? "oui" : "non");
+                       joueur->a_un_tresor ? "oui" : "non",
+                       joueur->a_un_antique ? "oui" : "non");
 
                 if (joueur->peut_tp) {
                     if (!a_cache_quelquechose(jeux)) {
@@ -616,7 +613,7 @@ void jouer_jeux(Jeux *jeux) {
                     choisi = choix_case_adjacente(jeux, joueur->pos);
                 }
 
-                jeux->plateau[choisi.ligne][choisi.col].reveler = 1;
+                jeux->plateau[choisi.ligne][choisi.col].revele = 1;
                 joueur->pos = choisi;
                 type_case = jeux->plateau[choisi.ligne][choisi.col].type;
 
@@ -642,7 +639,7 @@ void jouer_jeux(Jeux *jeux) {
 
                 } else if (type_case == TRESOR) {
                     printf(VERT "Bravo : tu as trouve un coffre 💰.\n" RESET);
-                    joueur->avoir_tresor = 1;
+                    joueur->a_un_tresor = 1;
 
                 } else if (type_case == PORTAIL) {
                     printf(JAUNE "Portail trouve 🌀 : le prochain deplacement sera libre.\n" RESET);
@@ -657,13 +654,13 @@ void jouer_jeux(Jeux *jeux) {
                     if (est_ce_antique(joueur->id_class, type_case)) {
                         printf(VERT "Bravo : tu as trouve ton arme antique %s.\n" RESET,
                                code_case(type_case));
-                        joueur->avoir_antique = 1;
+                        joueur->a_un_antique = 1;
                     } else {
                         printf(JAUNE "Tu as trouve une arme antique, mais pas la tienne.\n" RESET);
                     }
                 }
 
-                if (joueur->avoir_tresor && joueur->avoir_antique) {
+                if (joueur->a_un_tresor && joueur->a_un_antique) {
                     jeux->gagnant = i;
                     break;
                 }
@@ -678,7 +675,7 @@ void jouer_jeux(Jeux *jeux) {
         }
     }
 
-    jeux->duree = difftime(time(NULL), jeux->heure_debut);
+    jeux->duree = difftime(time(NULL), jeux->heure_depart);
 
     reveler_plateau(jeux);
 
