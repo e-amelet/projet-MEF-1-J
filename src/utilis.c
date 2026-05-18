@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "utilis.h"
+#include "utils.h"
 
 int read_int(const char *prompt, int min, int max) {
     char ligne[100];
