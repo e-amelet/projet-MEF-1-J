@@ -33,7 +33,8 @@ typedef enum {
     ANTIQUE_GUERRIER,
     ANTIQUE_RANGER,
     ANTIQUE_MAGE,
-    ANTIQUE_VOLEUR
+    ANTIQUE_VOLEUR,
+    NB_TYPE_CASES
 } TypeCase;
 
 typedef struct{
@@ -67,6 +68,7 @@ typedef struct{
 typedef struct{
     Case plateau[TAILLE_PLATEAU][TAILLE_PLATEAU];
     Joueur joueurs[JOUEUR_MAX];
+    int value_base_cartes[NB_TYPE_CASES];
     int nombre_joueur;
     int gagnant;
     time_t heure_depart;

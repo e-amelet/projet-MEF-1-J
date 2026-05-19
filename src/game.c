@@ -151,6 +151,189 @@ const char *couleur_case(TypeCase type) {
     return BLANC;
 }
 
+const char *nom_type_case(TypeCase type) {
+    static const char *noms[] = {
+        "Basilic",
+        "Zombie",
+        "Troll",
+        "Harpie",
+        "Tresor",
+        "Portail",
+        "Totem",
+        "Antique guerrier",
+        "Antique ranger",
+        "Antique mage",
+        "Antique voleur"
+    };
+
+    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
+        return "Inconnu";
+    }
+
+    return noms[type];
+}
+
+void initialiser_value_base_cartes(Jeux *jeux) {
+    jeux->value_base_cartes[BASILIC] = 4;
+    jeux->value_base_cartes[ZOMBIE] = 4;
+    jeux->value_base_cartes[TROLL] = 4;
+    jeux->value_base_cartes[HARPIE] = 4;
+
+    jeux->value_base_cartes[TRESOR] = 2;
+    jeux->value_base_cartes[PORTAIL] = 1;
+    jeux->value_base_cartes[TOTEM] = 2;
+
+    jeux->value_base_cartes[ANTIQUE_GUERRIER] = 1;
+    jeux->value_base_cartes[ANTIQUE_RANGER] = 1;
+    jeux->value_base_cartes[ANTIQUE_MAGE] = 1;
+    jeux->value_base_cartes[ANTIQUE_VOLEUR] = 1;
+}
+
+int valeur_officielle_carte(TypeCase type) {
+    static const int valeurs_officielles[] = {
+        4,  /* BASILIC */
+        4,  /* ZOMBIE */
+        4,  /* TROLL */
+        4,  /* HARPIE */
+        2,  /* TRESOR */
+        1,  /* PORTAIL */
+        2,  /* TOTEM */
+        1,  /* ANTIQUE_GUERRIER */
+        1,  /* ANTIQUE_RANGER */
+        1,  /* ANTIQUE_MAGE */
+        1   /* ANTIQUE_VOLEUR */
+    };
+
+    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
+        return 0;
+    }
+
+    return valeurs_officielles[type];
+}
+
+int total_value_base_cartes(const Jeux *jeux) {
+    int total = 0;
+    int i;
+
+    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
+        total += jeux->value_base_cartes[i];
+    }
+
+    return total;
+}
+
+int value_base_cartes_est_valide(const Jeux *jeux) {
+    int i;
+    int total = total_value_base_cartes(jeux);
+    int valide = 1;
+
+    if (total < TAILLE_PLATEAU * TAILLE_PLATEAU) {
+        printf(ROUGE "\nErreur : il n'y a pas assez de cartes sur le terrain.\n" RESET);
+        printf("Total actuel : %d / %d\n", total, TAILLE_PLATEAU * TAILLE_PLATEAU);
+        valide = 0;
+    } else if (total > TAILLE_PLATEAU * TAILLE_PLATEAU) {
+        printf(ROUGE "\nErreur : il y a trop de cartes sur le terrain.\n" RESET);
+        printf("Total actuel : %d / %d\n", total, TAILLE_PLATEAU * TAILLE_PLATEAU);
+        valide = 0;
+    }
+
+    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
+        int attendu = valeur_officielle_carte((TypeCase)i);
+        int actuel = jeux->value_base_cartes[i];
+
+        if (actuel != attendu) {
+            printf(ROUGE "Erreur : %s doit valoir %d, mais vaut %d.\n" RESET,
+                   nom_type_case((TypeCase)i),
+                   attendu,
+                   actuel);
+            valide = 0;
+        }
+    }
+
+    return valide;
+}
+
+void afficher_value_base_cartes(const Jeux *jeux) {
+    int i;
+
+    printf(GRAS "\nConfiguration actuelle des cartes :\n" RESET);
+
+    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
+        printf("- %s %s : %d\n",
+               code_case((TypeCase)i),
+               nom_type_case((TypeCase)i),
+               jeux->value_base_cartes[i]);
+    }
+
+    printf("Total : %d / %d\n",
+           total_value_base_cartes(jeux),
+           TAILLE_PLATEAU * TAILLE_PLATEAU);
+}
+
+void saisir_value_base_cartes(Jeux *jeux) {
+    int i;
+    char prompt[120];
+
+    printf(JAUNE "\nModification du nombre de cartes.\n" RESET);
+
+    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
+        snprintf(prompt,
+                 sizeof(prompt),
+                 "Nombre de cartes pour %s %s : ",
+                 code_case((TypeCase)i),
+                 nom_type_case((TypeCase)i));
+
+        jeux->value_base_cartes[i] = read_int(prompt, 0, 25);
+    }
+}
+
+void verifier_ou_corriger_value_base_cartes(Jeux *jeux) {
+    int choix;
+
+    while (!value_base_cartes_est_valide(jeux)) {
+        printf(JAUNE "\nLa configuration des cartes n'est pas valide.\n" RESET);
+        afficher_value_base_cartes(jeux);
+
+        choix = read_int(
+            "\nQue veux-tu faire ?\n"
+            "1. Corriger automatiquement avec les valeurs officielles\n"
+            "2. Ressaisir les valeurs manuellement\n"
+            "Choix : ",
+            1,
+            2
+        );
+
+        if (choix == 1) {
+            initialiser_value_base_cartes(jeux);
+            printf(VERT "Les valeurs officielles ont ete restaurees.\n" RESET);
+        } else {
+            saisir_value_base_cartes(jeux);
+        }
+    }
+}
+
+void configurer_value_base_cartes(Jeux *jeux) {
+    int choix;
+
+    initialiser_value_base_cartes(jeux);
+
+    choix = read_int(
+        "\nConfiguration des cartes :\n"
+        "1. Garder les valeurs officielles\n"
+        "2. Modifier les valeurs manuellement\n"
+        "Choix : ",
+        1,
+        2
+    );
+
+    if (choix == 2) {
+        saisir_value_base_cartes(jeux);
+        verifier_ou_corriger_value_base_cartes(jeux);
+    }
+
+    afficher_value_base_cartes(jeux);
+}
+
 int dedans(Position p){
     return p.ligne >= 0 && p.ligne < TAILLE_PLATEAU && p.col>= 0 && p.col < TAILLE_PLATEAU;
 }
@@ -266,35 +449,30 @@ void ecrire_legende(void) {
     printf("🛡️ bouclier | 🔦 torche | 🪓 hache | 🏹 arc\n");
 }
 
-void initier_plateau(Jeux *jeux){
-    TypeCase cases[25];
-    int i=0;
-    int r, c;
+void initier_plateau(Jeux *jeux) {
+    TypeCase cases[TAILLE_PLATEAU * TAILLE_PLATEAU];
+    int i = 0;
+    int r;
+    int c;
+    int type;
+    int k;
 
-    cases[i++]=ANTIQUE_GUERRIER;
-    cases[i++]=ANTIQUE_RANGER;
-    cases[i++]=ANTIQUE_MAGE;
-    cases[i++]= ANTIQUE_VOLEUR;
+    verifier_ou_corriger_value_base_cartes(jeux);
 
-    cases[i++]= TRESOR;
-    cases[i++]= TRESOR;
+    for (type = BASILIC; type <= ANTIQUE_VOLEUR; type++) {
+        for (k = 0; k < jeux->value_base_cartes[type]; k++) {
+            cases[i++] = (TypeCase)type;
+        }
+    }
 
-    cases[i++]= PORTAIL;
+    melanger(cases, TAILLE_PLATEAU * TAILLE_PLATEAU);
 
-    cases[i++]= TOTEM;
-    cases[i++]= TOTEM;
+    i = 0;
 
-    cases[i++]= BASILIC; cases[i++]= BASILIC; cases[i++]= BASILIC; cases[i++]= BASILIC;
-    cases[i++]= ZOMBIE; cases[i++]= ZOMBIE; cases[i++]= ZOMBIE; cases[i++]= ZOMBIE;
-    cases[i++]= TROLL; cases[i++]= TROLL; cases[i++]= TROLL; cases[i++]= TROLL;
-    cases[i++]= HARPIE; cases[i++]= HARPIE; cases[i++]= HARPIE; cases[i++]= HARPIE;
-
-    melanger(cases, 25);
-    i=0;
-    for (r=0; r<TAILLE_PLATEAU; r++){
-        for (c=0; c< TAILLE_PLATEAU; c++){
-            jeux->plateau[r][c].type=cases[i++];
-            jeux->plateau[r][c].revele=0;
+    for (r = 0; r < TAILLE_PLATEAU; r++) {
+        for (c = 0; c < TAILLE_PLATEAU; c++) {
+            jeux->plateau[r][c].type = cases[i++];
+            jeux->plateau[r][c].revele = 0;
         }
     }
 }
@@ -525,13 +703,15 @@ void init_joueurs(Jeux *jeux) {
         char prompt[100];
 
         snprintf(prompt, sizeof(prompt), "Nom du joueur %d : ", i + 1);
-        read_text(prompt, jeux->joueurs[i].nom, MAX_NOM);
+        read_text(prompt, jeux->joueurs[i].nom, TAILLE_NOM_MAX);
 
         jeux->joueurs[i].id_class = (ClasseJoueur)i;
         jeux->joueurs[i].depart = position_depart(i);
 
         respawn_joueur(&jeux->joueurs[i]);
     }
+
+    configurer_value_base_cartes(jeux);
 }
 
 void montrer_stats(void) {
