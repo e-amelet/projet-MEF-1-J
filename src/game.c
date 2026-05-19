@@ -174,7 +174,7 @@ const char *nom_type_case(TypeCase type) {
 }
 
 void initialiser_value_base_cartes(Jeux *jeux) {
-    jeux->value_base_cartes[BASILIC] = 3;
+    jeux->value_base_cartes[BASILIC] = 4;
     jeux->value_base_cartes[ZOMBIE] = 4;
     jeux->value_base_cartes[TROLL] = 4;
     jeux->value_base_cartes[HARPIE] = 4;
