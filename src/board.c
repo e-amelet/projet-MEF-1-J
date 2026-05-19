@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "card_config.h"
 #include "board.h"
 #include "rules.h"
 #include "display.h"
@@ -18,89 +18,6 @@ static void melanger(TypeCase cases[], int taille) {
     }
 }
 
-static void initialiser_value_base_cartes(Jeux *jeux) {
-    jeux->value_base_cartes[BASILIC] = 4;
-    jeux->value_base_cartes[ZOMBIE] = 4;
-    jeux->value_base_cartes[TROLL] = 4;
-    jeux->value_base_cartes[HARPIE] = 4;
-
-    jeux->value_base_cartes[TRESOR] = 2;
-    jeux->value_base_cartes[PORTAIL] = 1;
-    jeux->value_base_cartes[TOTEM] = 2;
-
-    jeux->value_base_cartes[ANTIQUE_GUERRIER] = 1;
-    jeux->value_base_cartes[ANTIQUE_RANGER] = 1;
-    jeux->value_base_cartes[ANTIQUE_MAGE] = 1;
-    jeux->value_base_cartes[ANTIQUE_VOLEUR] = 1;
-}
-
-static int valeur_officielle_carte(TypeCase type) {
-    static const int valeurs[] = {
-        4,
-        4,
-        4,
-        4,
-        2,
-        1,
-        2,
-        1,
-        1,
-        1,
-        1
-    };
-
-    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
-        return 0;
-    }
-
-    return valeurs[type];
-}
-
-static int total_value_base_cartes(const Jeux *jeux) {
-    int total = 0;
-    int i;
-
-    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
-        total += jeux->value_base_cartes[i];
-    }
-
-    return total;
-}
-
-static int value_base_cartes_est_valide(const Jeux *jeux) {
-    int i;
-    int total = total_value_base_cartes(jeux);
-    int valide = 1;
-
-    if (total != TAILLE_PLATEAU * TAILLE_PLATEAU) {
-        printf(ROUGE "\nErreur : le plateau doit contenir exactement %d cartes.\n" RESET,
-               TAILLE_PLATEAU * TAILLE_PLATEAU);
-        printf("Total actuel : %d\n", total);
-        valide = 0;
-    }
-
-    for (i = BASILIC; i <= ANTIQUE_VOLEUR; i++) {
-        int attendu = valeur_officielle_carte((TypeCase)i);
-        int actuel = jeux->value_base_cartes[i];
-
-        if (actuel != attendu) {
-            printf(ROUGE "Erreur : %s doit valoir %d, mais vaut %d.\n" RESET,
-                   nom_type_case((TypeCase)i),
-                   attendu,
-                   actuel);
-            valide = 0;
-        }
-    }
-
-    return valide;
-}
-
-static void verifier_ou_reparer_value_base_cartes(Jeux *jeux) {
-    if (!value_base_cartes_est_valide(jeux)) {
-        printf(JAUNE "Configuration invalide : restauration des valeurs officielles.\n" RESET);
-        initialiser_value_base_cartes(jeux);
-    }
-}
 
 void initier_plateau(Jeux *jeux) {
     TypeCase cases[TAILLE_PLATEAU * TAILLE_PLATEAU];
@@ -110,8 +27,7 @@ void initier_plateau(Jeux *jeux) {
     int type;
     int k;
 
-    initialiser_value_base_cartes(jeux);
-    verifier_ou_reparer_value_base_cartes(jeux);
+    verifier_ou_corriger_value_base_cartes(jeux);
 
     for (type = BASILIC; type <= ANTIQUE_VOLEUR; type++) {
         for (k = 0; k < jeux->value_base_cartes[type]; k++) {

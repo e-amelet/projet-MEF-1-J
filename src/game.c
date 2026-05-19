@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-
+#include "card_config.h"
 #include "game.h"
 #include "utils.h"
 #include "display.h"
@@ -188,6 +188,8 @@ void init_joueurs(Jeux *jeux) {
 
         respawn_joueur(&jeux->joueurs[i]);
     }
+
+    configurer_value_base_cartes(jeux);
 }
 
 int demande_replay(void) {
