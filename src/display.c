@@ -1,134 +1,99 @@
 #include <stdio.h>
 #include "display.h"
 
+typedef struct {
+    const char *nom;
+    const char *emoji;
+} Info;
+
+typedef struct {
+    const char *nom;
+    const char *emoji;
+    const char *couleur;
+} InfoCase;
+
+static const Info CLASSES[] = {
+    {"Guerrier", "🛡️"},
+    {"Ranger", "🌿"},
+    {"Mage", "🧙"},
+    {"Voleur", "🥷"}
+};
+
+static const Info ARMES[] = {
+    {"Bouclier", "🛡️"},
+    {"Torche", "🔦"},
+    {"Hache", "🪓"},
+    {"Arc", "🏹"}
+};
+
+static const InfoCase CASES[] = {
+    {"Basilic", "🐍", ROUGE},
+    {"Zombie", "🧟", ROUGE},
+    {"Troll", "👹", ROUGE},
+    {"Harpie", "🦅", ROUGE},
+    {"Tresor", "💰", VERT},
+    {"Portail", "🌀", JAUNE},
+    {"Totem", "🗿", JAUNE},
+    {"Antique guerrier", "🔥", VIOLET},
+    {"Antique ranger", "🪄", VIOLET},
+    {"Antique mage", "📖", VIOLET},
+    {"Antique voleur", "🗡️", VIOLET}
+};
+
 const char *nom_classe(ClasseJoueur id_class) {
-    switch (id_class) {
-        case GUERRIER:
-            return "Guerrier";
-        case RANGER:
-            return "Ranger";
-        case MAGE:
-            return "Mage";
-        case VOLEUR:
-            return "Voleur";
-        default:
-            return "Inconnue";
+    if (id_class < GUERRIER || id_class > VOLEUR) {
+        return "Inconnue";
     }
+
+    return CLASSES[id_class].nom;
 }
 
 const char *emoji_classe(ClasseJoueur id_class) {
-    static const char *emojis[] = {
-        "🛡️",
-        "🌿",
-        "🧙",
-        "🥷"
-    };
-
     if (id_class < GUERRIER || id_class > VOLEUR) {
         return "❔";
     }
 
-    return emojis[id_class];
+    return CLASSES[id_class].emoji;
 }
 
 const char *nom_arme(Arme arme) {
-    switch (arme) {
-        case BOUCLIER:
-            return "Bouclier";
-        case TORCHE:
-            return "Torche";
-        case HACHE:
-            return "Hache";
-        case ARC:
-            return "Arc";
-        default:
-            return "Inconnue";
+    if (arme < BOUCLIER || arme > ARC) {
+        return "Inconnue";
     }
+
+    return ARMES[arme].nom;
 }
 
 const char *emoji_arme(Arme arme) {
-    static const char *emojis[] = {
-        "🛡️",
-        "🔦",
-        "🪓",
-        "🏹"
-    };
-
     if (arme < BOUCLIER || arme > ARC) {
         return "❔";
     }
 
-    return emojis[arme];
-}
-
-const char *code_case(TypeCase type) {
-    static const char *emojis[] = {
-        "🐍",
-        "🧟",
-        "👹",
-        "🦅",
-        "💰",
-        "🌀",
-        "🗿",
-        "🔥",
-        "🪄",
-        "📖",
-        "🗡️"
-    };
-
-    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
-        return "❔";
-    }
-
-    return emojis[type];
-}
-
-const char *couleur_case(TypeCase type) {
-    if (type == TRESOR) {
-        return VERT;
-    }
-
-    if (type == PORTAIL || type == TOTEM) {
-        return JAUNE;
-    }
-
-    if (type == ANTIQUE_GUERRIER ||
-        type == ANTIQUE_RANGER ||
-        type == ANTIQUE_MAGE ||
-        type == ANTIQUE_VOLEUR) {
-        return VIOLET;
-    }
-
-    if (type == BASILIC ||
-        type == ZOMBIE ||
-        type == TROLL ||
-        type == HARPIE) {
-        return ROUGE;
-    }
-
-    return BLANC;
+    return ARMES[arme].emoji;
 }
 
 const char *nom_type_case(TypeCase type) {
-    static const char *noms[] = {
-        "Basilic",
-        "Zombie",
-        "Troll",
-        "Harpie",
-        "Tresor",
-        "Portail",
-        "Totem",
-        "Antique guerrier",
-        "Antique ranger",
-        "Antique mage",
-        "Antique voleur"
-    };
-
     if (type < BASILIC || type > ANTIQUE_VOLEUR) {
         return "Inconnu";
     }
 
-    return noms[type];
+    return CASES[type].nom;
+}
+
+const char *code_case(TypeCase type) {
+    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
+        return "❔";
+    }
+
+    return CASES[type].emoji;
+}
+
+const char *couleur_case(TypeCase type) {
+    if (type < BASILIC || type > ANTIQUE_VOLEUR) {
+        return BLANC;
+    }
+
+    return CASES[type].couleur;
 }
 
 void ecrire_tour(const Joueur *joueur) {
