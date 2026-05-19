@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 #include <time.h>
+
 #define TAILLE_PLATEAU 5
 #define JOUEUR_MIN 2
 #define JOUEUR_MAX 4
@@ -39,7 +40,7 @@ typedef enum {
 
 typedef struct{
     int ligne;
-    int col;      
+    int col;
 }Position;
 
 typedef struct {
@@ -79,4 +80,5 @@ void init_joueurs(Jeux *jeux);
 void jouer_jeux(Jeux *jeux);
 void montrer_stats();
 int demande_replay();
+
 #endif
