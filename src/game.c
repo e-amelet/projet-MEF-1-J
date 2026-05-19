@@ -191,7 +191,7 @@ void initialiser_value_base_cartes(Jeux *jeux) {
 
 int valeur_officielle_carte(TypeCase type) {
     static const int valeurs_officielles[] = {
-        4,  /* BASILIC */
+        3,  /* BASILIC */
         4,  /* ZOMBIE */
         4,  /* TROLL */
         4,  /* HARPIE */
