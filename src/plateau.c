@@ -6,6 +6,7 @@
 #include "display.h"
 #include "utils.h"
 
+/* Mélange aléatoirement un tableau de TypeCase */
 static void melanger(TypeCase cases[], int taille) {
     int i;
 
@@ -18,7 +19,7 @@ static void melanger(TypeCase cases[], int taille) {
     }
 }
 
-
+/* Initialise le plateau de jeu */ 
 void initier_plateau(Jeux *jeux) {
     TypeCase cases[TAILLE_PLATEAU * TAILLE_PLATEAU];
     int i = 0;
@@ -27,18 +28,22 @@ void initier_plateau(Jeux *jeux) {
     int type;
     int k;
 
+    /* Vérifie ou corrige la configuration des cartes */
     verifier_ou_corriger_value_base_cartes(jeux);
 
+    /* Remplissage du tableau de cases selon les valeurs définies */
     for (type = BASILIC; type <= ANTIQUE_VOLEUR; type++) {
         for (k = 0; k < jeux->value_base_cartes[type]; k++) {
             cases[i++] = (TypeCase)type;
         }
     }
 
+    /* Mélange aléatoire des cases */
     melanger(cases, TAILLE_PLATEAU * TAILLE_PLATEAU);
 
     i = 0;
 
+    /* Placement des cases dans la grille du plateau */
     for (r = 0; r < TAILLE_PLATEAU; r++) {
         for (c = 0; c < TAILLE_PLATEAU; c++) {
             jeux->plateau[r][c].type = cases[i++];
@@ -47,7 +52,7 @@ void initier_plateau(Jeux *jeux) {
     }
 }
 
-
+/*Définit la visibilité de toutes les cases du plateau (0=cache ou 1=revele)*/
 static void definir_visibilite_plateau(Jeux *jeux, int valeur) {
     int r;
     int c;
@@ -67,6 +72,8 @@ void reveler_plateau(Jeux *jeux) {
     definir_visibilite_plateau(jeux, 1);
 }
 
+/*Collecte les cases adjacentes (haut, bas, gauche, droite) qui sont encore
+ cachées et retourne le nombre de cases trouvées.*/
 static int collecter_cases_adjacentes_cachees(const Jeux *jeux,
                                               Position pos,
                                               Position options[]) {
@@ -95,12 +102,15 @@ static int collecter_cases_adjacentes_cachees(const Jeux *jeux,
     return compte;
 }
 
+/*Indique s’il existe au moins une case cachée adjacente à la position donnée.*/
 int a_cache_case_adjacente(const Jeux *jeux, Position pos) {
     Position options[4];
 
     return collecter_cases_adjacentes_cachees(jeux, pos, options) > 0;
 }
 
+/* Collecte toutes les cases cachées du plateau. Retourne le nombre total 
+de cases cachées.*/
 static int collecter_cases_cachees(const Jeux *jeux, Position options[]) {
     int r;
     int c;
@@ -117,12 +127,15 @@ static int collecter_cases_cachees(const Jeux *jeux, Position options[]) {
     return compte;
 }
 
+/*Indique s’il reste au moins une case cachéesur l’ensemble du plateau.*/
 int a_cache_quelquechose(const Jeux *jeux) {
     Position options[TAILLE_PLATEAU * TAILLE_PLATEAU];
 
     return collecter_cases_cachees(jeux, options) > 0;
 }
 
+/* Permet au joueur de choisir une case adjacente cachée.
+ Affiche les options possibles et retourne la position choisie. */
 Position choix_case_adjacente(const Jeux *jeux, Position pos) {
     Position options[4];
     int compte;
@@ -145,6 +158,8 @@ Position choix_case_adjacente(const Jeux *jeux, Position pos) {
     return options[choix - 1];
 }
 
+/* Permet de choisir n’importe quelle case cachée du plateau.
+ */
 Position choisir_une_case_cachee(const Jeux *jeux) {
     Position options[TAILLE_PLATEAU * TAILLE_PLATEAU];
     int compte;
@@ -167,6 +182,8 @@ Position choisir_une_case_cachee(const Jeux *jeux) {
     return options[choix - 1];
 }
 
+/*Effet du totem (echange de position avec une case cachée choisie
+ et recache des deux cases après l’échange) */
 void echanger_totem(Jeux *jeux, Position totem_pos) {
     Position vise;
     TypeCase temp;
@@ -180,11 +197,13 @@ void echanger_totem(Jeux *jeux, Position totem_pos) {
 
     vise = choisir_une_case_cachee(jeux);
 
+    /* Échange des types de cases */
     temp = jeux->plateau[totem_pos.ligne][totem_pos.col].type;
     jeux->plateau[totem_pos.ligne][totem_pos.col].type =
         jeux->plateau[vise.ligne][vise.col].type;
     jeux->plateau[vise.ligne][vise.col].type = temp;
 
+    /* Les deux cases sont recachées */
     jeux->plateau[totem_pos.ligne][totem_pos.col].revele = 0;
     jeux->plateau[vise.ligne][vise.col].revele = 0;
 

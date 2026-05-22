@@ -9,8 +9,7 @@
 #include "stats.h"
 
 
-/*
- * Permet au joueur de choisir une arme parmi 4 options et retourne
+/* Permet au joueur de choisir une arme parmi 4 options et retourne
   l'arme choisie.*/
 static Arme choisir_arme(void) {
     return (Arme)(lire_entier(
@@ -25,8 +24,7 @@ static Arme choisir_arme(void) {
     ) - 1);
 }
 
-/*
- * Affiche l'état actuel du joueur (presence du trésor et possession
+/*Affiche l'état actuel du joueur (presence du trésor et possession
   de l'arme antique) avant chaque tour.*/
 static void afficher_etat_joueur(const Joueur *joueur) {
     printf("\nEtat du joueur : coffre=%s, arme antique=%s\n",
@@ -55,19 +53,11 @@ static void reveler_case(Jeux *jeux, Joueur *joueur, Position choisi) {
            RESET);
 }
 
-<<<<<<< HEAD
 /*Applique l'effet de la case sur le joueur (combat contre les monstres, trésor,
  portail, totem, arme antique)*/
 static void appliquer_effet_case(Jeux *jeux, Joueur *joueur, TypeCase type_case,
          Position choisi, int *tour_termine) {
         /* Cas : monstre */
-=======
-static void appliquer_effet_case(Jeux *jeux,
-                                Joueur *joueur,
-                                TypeCase type_case,
-                                Position choisi,
-                                int *tour_termine) {
->>>>>>> fc840dc (commentaires)
     if (est_monstre(type_case)) {
         if (bonne_arme(joueur->arme, type_case)) {
             printf(VERT "Bonne arme : monstre vaincu.\n" RESET);

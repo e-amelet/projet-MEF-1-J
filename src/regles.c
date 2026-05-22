@@ -1,11 +1,14 @@
 #include "regles.h"
 
+/*Vérifie si une position se trouve à l'intérieur des limites du plateau de jeu.
+Retourne 1 si oui, 0 sinon.*/
 int dedans(Position p) {
     return p.ligne >= 0 &&
            p.ligne < TAILLE_PLATEAU &&
            p.col >= 0 &&
            p.col < TAILLE_PLATEAU;
 }
+
 
 int est_monstre(TypeCase type) {
     return type == BASILIC ||
@@ -14,6 +17,7 @@ int est_monstre(TypeCase type) {
            type == HARPIE;
 }
 
+/*Vérifie si l'arme choisie est efficace contre le monstre rencontré. */
 int bonne_arme(Arme arme, TypeCase monstre) {
     return (arme == BOUCLIER && monstre == BASILIC) ||
            (arme == TORCHE   && monstre == ZOMBIE)  ||
@@ -21,6 +25,7 @@ int bonne_arme(Arme arme, TypeCase monstre) {
            (arme == ARC      && monstre == HARPIE);
 }
 
+/*Vérifie si une arme antique correspond à la classe du joueur.*/
 int est_ce_antique(ClasseJoueur id_class, TypeCase type_case) {
     return (id_class == GUERRIER && type_case == ANTIQUE_GUERRIER) ||
            (id_class == RANGER   && type_case == ANTIQUE_RANGER)   ||
@@ -28,6 +33,8 @@ int est_ce_antique(ClasseJoueur id_class, TypeCase type_case) {
            (id_class == VOLEUR   && type_case == ANTIQUE_VOLEUR);
 }
 
+/*Retourne la position de départ d’un joueur selon son index. Les positions
+ sont placées à l'extérieur du plateau pour obliger une entrée.*/
 Position position_depart(int index) {
     switch (index) {
         case 0:
@@ -43,6 +50,7 @@ Position position_depart(int index) {
     }
 }
 
+/*Réinitialise l'état d'un joueur au début d'une partie ou d'un tour. */
 void respawn_joueur(Joueur *joueur) {
     joueur->pos = joueur->depart;
     joueur->a_un_tresor = 0;
