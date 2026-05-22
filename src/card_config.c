@@ -99,7 +99,7 @@ static void saisir_value_base_cartes(Jeux *jeux) {
                  code_case((TypeCase)i),
                  nom_type_case((TypeCase)i));
 
-        jeux->value_base_cartes[i] = read_int(prompt, 0, TAILLE_PLATEAU * TAILLE_PLATEAU);
+        jeux->value_base_cartes[i] = lire_entier(prompt, 0, TAILLE_PLATEAU * TAILLE_PLATEAU);
     }
 }
 
@@ -109,7 +109,7 @@ void verifier_ou_corriger_value_base_cartes(Jeux *jeux) {
     while (!value_base_cartes_est_valide(jeux)) {
         afficher_value_base_cartes(jeux);
 
-        choix = read_int(
+        choix = lire_entier(
             "\nLa configuration des cartes n'est pas valide.\n"
             "1. Corriger automatiquement avec les valeurs officielles\n"
             "2. Ressaisir les valeurs manuellement\n"
@@ -132,7 +132,7 @@ void configurer_value_base_cartes(Jeux *jeux) {
 
     initialiser_value_base_cartes(jeux);
 
-    choix = read_int(
+    choix = lire_entier(
         "\nConfiguration des cartes :\n"
         "1. Garder les valeurs officielles\n"
         "2. Modifier les valeurs manuellement\n"

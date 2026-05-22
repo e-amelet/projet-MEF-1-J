@@ -9,7 +9,7 @@
 #include "stats.h"
 
 static Arme choisir_arme(void) {
-    return (Arme)(read_int(
+    return (Arme)(lire_entier(
         "\nChoisis ton arme :\n"
         "1. 🛡️ Bouclier\n"
         "2. 🔦 Torche\n"
@@ -175,7 +175,7 @@ static void terminer_partie(Jeux *jeux) {
 void init_joueurs(Jeux *jeux) {
     int i;
 
-    jeux->nombre_joueur = read_int("Nombre de joueurs (2 a 4) : ", 2, 4);
+    jeux->nombre_joueur = lire_entier("Nombre de joueurs (2 a 4) : ", 2, 4);
 
     for (i = 0; i < jeux->nombre_joueur; i++) {
         char prompt[100];
@@ -193,7 +193,7 @@ void init_joueurs(Jeux *jeux) {
 }
 
 int demande_replay(void) {
-    return read_int(
+    return lire_entier(
         "\n1. Rejouer avec les memes joueurs\n"
         "2. Retour au menu principal\n"
         "Choix : ",

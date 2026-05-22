@@ -6,7 +6,7 @@
 #include "utils.h"
 
 int menu_principal(void) {
-    return read_int(
+    return lire_entier(
         "\n=== MEMO-RPG ===\n"
         "1. Nouvelle partie\n"
         "2. Voir les statistiques\n"

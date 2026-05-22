@@ -3,7 +3,7 @@
 #include <string.h>
 #include "utils.h"
 
-int read_int(const char *prompt, int min, int max) {
+int lire_entier(const char *prompt, int min, int max) {
     char ligne[100];
     char *finptr;
     long valeur;
