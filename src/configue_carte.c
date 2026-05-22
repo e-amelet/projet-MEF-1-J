@@ -1,6 +1,5 @@
-make #include <stdio.h>
-
-#include "card_config.h"
+#include <stdio.h>
+#include "configue_carte.h"
 #include "display.h"
 #include "utils.h"
 
@@ -21,7 +20,7 @@ static const int VALEURS_OFFICIELLES[NB_TYPE_CASES] = {
 void initialiser_value_base_cartes(Jeux *jeux) {
     int i;
 
-    for (i = 0; i < NB_TYPE_CASES; i++) {
+    for (i = 0; i < NB_TYPE_CASES; i++) { 
         jeux->value_base_cartes[i] = VALEURS_OFFICIELLES[i];
     }
 }
