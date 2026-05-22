@@ -8,6 +8,10 @@
 #include "plateau.h"
 #include "stats.h"
 
+
+/*
+ * Permet au joueur de choisir une arme parmi 4 options et retourne
+  l'arme choisie.*/
 static Arme choisir_arme(void) {
     return (Arme)(lire_entier(
         "\nChoisis ton arme :\n"
@@ -21,12 +25,17 @@ static Arme choisir_arme(void) {
     ) - 1);
 }
 
+/*
+ * Affiche l'état actuel du joueur (presence du trésor et possession
+  de l'arme antique) avant chaque tour.*/
 static void afficher_etat_joueur(const Joueur *joueur) {
     printf("\nEtat du joueur : coffre=%s, arme antique=%s\n",
            joueur->a_un_tresor ? "oui" : "non",
            joueur->a_un_antique ? "oui" : "non");
 }
 
+/* Révèle une case du plateau (met la case comme révélée,
+  maj position du joueur et affiche le type de case decouverte). */
 static void reveler_case(Jeux *jeux, Joueur *joueur, Position choisi) {
     TypeCase type_case;
 
@@ -46,11 +55,11 @@ static void reveler_case(Jeux *jeux, Joueur *joueur, Position choisi) {
            RESET);
 }
 
-static void appliquer_effet_case(Jeux *jeux,
-                                 Joueur *joueur,
-                                 TypeCase type_case,
-                                 Position choisi,
-                                 int *tour_termine) {
+/*Applique l'effet de la case sur le joueur (combat contre les monstres, trésor,
+ portail, totem, arme antique)*/
+static void appliquer_effet_case(Jeux *jeux, Joueur *joueur, TypeCase type_case,
+         Position choisi, int *tour_termine) {
+        /* Cas : monstre */
     if (est_monstre(type_case)) {
         if (bonne_arme(joueur->arme, type_case)) {
             printf(VERT "Bonne arme : monstre vaincu.\n" RESET);
@@ -61,32 +70,40 @@ static void appliquer_effet_case(Jeux *jeux,
             *tour_termine = 1;
         }
 
+         /* Cas : Tresor */
     } else if (type_case == TRESOR) {
         printf(VERT "Bravo : tu as trouve un coffre 💰.\n" RESET);
         joueur->a_un_tresor = 1;
 
+        /* Cas : portail */
     } else if (type_case == PORTAIL) {
         printf(JAUNE "Portail trouve 🌀 : le prochain deplacement sera libre.\n" RESET);
         joueur->peut_tp = 1;
 
+        /* Cas : totem */
     } else if (type_case == TOTEM) {
         printf(JAUNE "Totem de transmutation 🗿 : fin du tour.\n" RESET);
         echanger_totem(jeux, choisi);
         *tour_termine = 1;
 
+        /* Cas : arme antique correspondant au joueur */
     } else if (est_ce_antique(joueur->id_class, type_case)) {
         printf(VERT "Bravo : tu as trouve ton arme antique %s.\n" RESET,
                code_case(type_case));
         joueur->a_un_antique = 1;
 
+            /* Cas : arme antique d’un autre joueur */
     } else {
         printf(JAUNE "Tu as trouve une arme antique, mais pas la tienne.\n" RESET);
     }
 }
 
+/*Détermine la prochaine case à jouer (gestion du portail, cases adjacentes,
+  blocage si aucune disponible) */
 static Position choisir_prochaine_case(Jeux *jeux, Joueur *joueur, int *tour_termine) {
     Position choisi;
 
+    /* Cas portail actif */
     if (joueur->peut_tp) {
         if (!a_cache_quelquechose(jeux)) {
             printf(JAUNE "Plus aucune case cachee. Fin du tour.\n" RESET);
@@ -100,6 +117,7 @@ static Position choisir_prochaine_case(Jeux *jeux, Joueur *joueur, int *tour_ter
         return choisi;
     }
 
+    /* Cas normal : déplacement adjacent */
     if (!a_cache_case_adjacente(jeux, joueur->pos)) {
         printf(JAUNE "Aucune case cachee autour de toi. Tu es bloque.\n" RESET);
         *tour_termine = 1;
@@ -109,6 +127,8 @@ static Position choisir_prochaine_case(Jeux *jeux, Joueur *joueur, int *tour_ter
     return choix_case_adjacente(jeux, joueur->pos);
 }
 
+/*Gère un tour complet d’un joueur(affichage etat, choix arme et deplacement,
+  revelation case, application effet et condition de victoires)*/
 static void jouer_tour_joueur(Jeux *jeux, int index_joueur) {
     Joueur *joueur = &jeux->joueurs[index_joueur];
     int tour_termine = 0;
@@ -143,18 +163,21 @@ static void jouer_tour_joueur(Jeux *jeux, int index_joueur) {
 
         appliquer_effet_case(jeux, joueur, type_case, choisi, &tour_termine);
 
+        /* Condition de victoire */
         if (joueur->a_un_tresor && joueur->a_un_antique) {
             jeux->gagnant = index_joueur;
             break;
         }
     }
 
+    /* Fin du tour */
     if (jeux->gagnant == -1) {
         cache_plateau(jeux);
         printf("\nFin du tour de %s.\n", joueur->nom);
     }
 }
-
+/* Termine la partie (calcul la durée, affiche le plateau final,
+  affiche le gagnant, met à jour les stats)*/
 static void terminer_partie(Jeux *jeux) {
     jeux->duree = difftime(time(NULL), jeux->heure_depart);
 
@@ -172,6 +195,8 @@ static void terminer_partie(Jeux *jeux) {
     maj_date_post_jeux(jeux);
 }
 
+/*Initialise tous les joueurs (nb de joueurs, nom, classe, position de départ,
+  état initial) et configure les cartes. */
 void init_joueurs(Jeux *jeux) {
     int i;
 
@@ -192,6 +217,7 @@ void init_joueurs(Jeux *jeux) {
     configurer_value_base_cartes(jeux);
 }
 
+/* Propose une option après une partie (rejouer ou retourner au menu)*/
 int demande_replay(void) {
     return lire_entier(
         "\n1. Rejouer avec les memes joueurs\n"
@@ -202,6 +228,8 @@ int demande_replay(void) {
     );
 }
 
+/*Boucle principale de jeu (initialise les joueurs et les cartes, puis boucle 
+sur les tours des joueurs) detecte le gagnant et termine la partie*/
 void jouer_jeux(Jeux *jeux) {
     int i;
 
