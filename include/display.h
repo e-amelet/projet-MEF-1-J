@@ -1,11 +1,11 @@
-#ifndef DISPLAY_H
+#ifndef DISPLAY_H /*ifndef = permet le moins 'erreur lors de la compilation quand les fichier s'inclus entre eux.*/
 #define DISPLAY_H
 
 #include "jeu.h"
 
 #define RESET       "\033[0m"
 #define GRAS        "\033[1m"
-
+/*couleur, grâce au guide sur les couleurs dans l'énoncé du projet*/
 #define ROUGE       "\033[31m"
 #define VERT        "\033[32m"
 #define JAUNE       "\033[33m"
@@ -14,7 +14,7 @@
 #define CYAN        "\033[36m"
 #define BLANC       "\033[37m"
 
-const char *nom_classe(ClasseJoueur id_class);
+const char *nom_classe(ClasseJoueur id_class); /*const: sert a fixe nos char pour qu'elle ne soit pas modifiable*/
 const char *emoji_classe(ClasseJoueur id_class);
 
 const char *nom_arme(Arme arme);

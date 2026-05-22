@@ -9,6 +9,8 @@
 #define STATS_MAX 200
 #define STATS_FILE "Stats_joueurs.txt"
 
+/*les différentes structures*/
+
 typedef enum {
     GUERRIER,
     RANGER,
@@ -35,16 +37,16 @@ typedef enum {
     ANTIQUE_RANGER,
     ANTIQUE_MAGE,
     ANTIQUE_VOLEUR,
-    NB_TYPE_CASES
+    NB_TYPE_CASES    /*permet d'avoir le nombre exact de type de case différentes dans les tableaux*/
 } TypeCase;
 
 typedef struct{
-    int ligne;
+   int ligne;       
     int col;
 }Position;
 
 typedef struct {
-    TypeCase type;
+    TypeCase type; /*chaque case a un type, peut etre reveler ou non*/
     int revele;
 }Case;
 
@@ -53,9 +55,9 @@ typedef struct {
     ClasseJoueur id_class;
     Position depart;
     Position pos;
-    int a_un_tresor;
-    int a_un_antique;
-    int en_vie;
+    int a_un_tresor;        
+    int a_un_antique;  /*Antique = arme antique*/
+    int en_vie;         
     int peut_tp;
     Arme arme;
 }Joueur;
@@ -72,8 +74,8 @@ typedef struct{
     int value_base_cartes[NB_TYPE_CASES];
     int nombre_joueur;
     int gagnant;
-    time_t heure_depart;
-    double duree;
+    time_t heure_depart;  /*time_t permet directement d'avoir le temps enregistrer en faisant la diff entre heure_depart et la fin grace a difftime*/
+    double duree;            /*car difftime renvoie un double*/   
 }Jeux;
 
 void init_joueurs(Jeux *jeux);
