@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef JEU_H
+#define JEU_H
 #include <time.h>
 
 #define TAILLE_PLATEAU 5

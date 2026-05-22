@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -Iinclude
-SRC = src/main.c src/game.c src/utilis.c src/display.c src/rules.c src/board.c src/stats.c src/card_config.c
+SRC = src/main.c src/jeu.c src/utilis.c src/display.c src/regles.c src/plateau.c src/stats.c src/configue_carte.c
 OBJ = $(SRC:.c=.o)
 TARGET = memo_rpg
 

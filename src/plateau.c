@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "card_config.h"
-#include "board.h"
-#include "rules.h"
+#include "configue_carte.h"
+#include "plateau.h"
+#include "regles.h"
 #include "display.h"
 #include "utils.h"
 

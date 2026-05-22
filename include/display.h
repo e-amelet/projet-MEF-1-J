@@ -1,7 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#include "game.h"
+#include "jeu.h"
 
 #define RESET       "\033[0m"
 #define GRAS        "\033[1m"

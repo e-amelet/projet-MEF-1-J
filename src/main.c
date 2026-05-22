@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <locale.h>
-#include "game.h"
+#include "jeu.h"
 #include "utils.h"
 
 int menu_principal(void) {

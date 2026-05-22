@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <time.h>
-#include "card_config.h"
-#include "game.h"
+#include "configue_carte.h"
+#include "jeu.h"
 #include "utils.h"
 #include "display.h"
-#include "rules.h"
-#include "board.h"
+#include "regles.h"
+#include "plateau.h"
 #include "stats.h"
 
 static Arme choisir_arme(void) {

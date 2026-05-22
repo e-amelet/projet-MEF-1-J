@@ -1,7 +1,7 @@
 #ifndef RULES_H
 #define RULES_H
 
-#include "game.h"
+#include "jeu.h"
 
 int dedans(Position p);
 int est_monstre(TypeCase type);

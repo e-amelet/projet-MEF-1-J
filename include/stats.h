@@ -1,7 +1,7 @@
 #ifndef STATS_H
 #define STATS_H
 
-#include "game.h"
+#include "jeu.h"
 
 void charger_stats(Stats stats[], int *compte);
 void sauvegarder_stats(const Stats stats[], int compte);

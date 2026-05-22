@@ -1,4 +1,4 @@
-#include "rules.h"
+#include "regles.h"
 
 int dedans(Position p) {
     return p.ligne >= 0 &&

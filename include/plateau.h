@@ -1,7 +1,7 @@
-#ifndef BOARD_H
-#define BOARD_H
+#ifndef PLATEAU_H
+#define PLATEAU_H
 
-#include "game.h"
+#include "jeu.h"
 
 void initier_plateau(Jeux *jeux);
 void cache_plateau(Jeux *jeux);

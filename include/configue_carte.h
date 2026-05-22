@@ -1,7 +1,7 @@
-#ifndef CARD_CONFIG_H
-#define CARD_CONFIG_H
+#ifndef CONFIGUE_CARTE_H
+#define CONFIGUE_CARTE_H
 
-#include "game.h"
+#include "jeu.h"
 
 void initialiser_value_base_cartes(Jeux *jeux);
 void configurer_value_base_cartes(Jeux *jeux);
