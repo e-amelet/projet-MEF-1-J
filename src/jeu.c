@@ -55,11 +55,19 @@ static void reveler_case(Jeux *jeux, Joueur *joueur, Position choisi) {
            RESET);
 }
 
+<<<<<<< HEAD
 /*Applique l'effet de la case sur le joueur (combat contre les monstres, trésor,
  portail, totem, arme antique)*/
 static void appliquer_effet_case(Jeux *jeux, Joueur *joueur, TypeCase type_case,
          Position choisi, int *tour_termine) {
         /* Cas : monstre */
+=======
+static void appliquer_effet_case(Jeux *jeux,
+                                Joueur *joueur,
+                                TypeCase type_case,
+                                Position choisi,
+                                int *tour_termine) {
+>>>>>>> fc840dc (commentaires)
     if (est_monstre(type_case)) {
         if (bonne_arme(joueur->arme, type_case)) {
             printf(VERT "Bonne arme : monstre vaincu.\n" RESET);

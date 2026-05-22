@@ -13,14 +13,14 @@ typedef struct {
 } InfoCase;
 
 static const Info CLASSES[] = {
-    {"Guerrier", "🛡️"},
+    {"Guerrier", "🛡️"},     /*associe chaque classe à un emoji pour l'affichage et se met en lien avec les enum de dans .h*/
     {"Ranger", "🌿"},
     {"Mage", "🧙"},
     {"Voleur", "🥷"}
 };
 
 static const Info ARMES[] = {
-    {"Bouclier", "🛡️"},
+    {"Bouclier", "🛡️"},     /*associe chaque arme à un emoji*/
     {"Torche", "🔦"},
     {"Hache", "🪓"},
     {"Arc", "🏹"}
@@ -41,7 +41,7 @@ static const InfoCase CASES[] = {
 };
 
 const char *nom_classe(ClasseJoueur id_class) {
-    if (id_class < GUERRIER || id_class > VOLEUR) {
+    if (id_class < GUERRIER || id_class > VOLEUR) {  /*remplace les numéros grace au enum*/
         return "Inconnue";
     }
 
