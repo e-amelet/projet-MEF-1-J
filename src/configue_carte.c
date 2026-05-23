@@ -19,7 +19,7 @@ static const int VALEURS_OFFICIELLES[NB_TYPE_CASES] = {
 
 /* Initialise le tableau valeur_base_cartes avec les valeurs officielles.
 Chaque type de case reçoit sa valeur par défaut définie dans VALEURS_OFFICIELLES.*/
-void initialiser_value_base_cartes(Jeux *jeux) {
+void initier_valeur_base_carte(Jeux *jeux) {
     int i;
 
     for (i = 0; i < NB_TYPE_CASES; i++) { 
@@ -29,7 +29,7 @@ void initialiser_value_base_cartes(Jeux *jeux) {
 
 /* Calcule la somme totale des cartes présentes sur le plateau en additionnant
  les valeurs de tous les types de cases. */
-int total_value_base_cartes(const Jeux *jeux) {
+int total_valeur_base_cartes(const Jeux *jeux) {
     int total = 0;
     int i;
 
@@ -42,7 +42,7 @@ int total_value_base_cartes(const Jeux *jeux) {
 
 /*Affiche la configuration actuelle des cartes (code,type,nb de cartes)
  et affiche le total par rapport à la taille du plateau.*/
-void afficher_value_base_cartes(const Jeux *jeux) {
+void afficher_valeur_base_cartes(const Jeux *jeux) {
     int i;
 
     printf(GRAS "\nConfiguration actuelle des cartes :\n" RESET);
@@ -55,7 +55,7 @@ void afficher_value_base_cartes(const Jeux *jeux) {
     }
 
     printf("Total : %d / %d\n",
-           total_value_base_cartes(jeux),
+           total_valeur_base_cartes(jeux),
            TAILLE_PLATEAU * TAILLE_PLATEAU);
 }
 
@@ -64,7 +64,7 @@ void afficher_value_base_cartes(const Jeux *jeux) {
  (si total=taille plateau et chaque type respecte sa valeur). retourne 1 si valide, 0 sinon.*/    
 static int value_base_cartes_est_valide(const Jeux *jeux) {
     int i;
-    int total = total_value_base_cartes(jeux);
+    int total = total_valeur_base_cartes(jeux);
     int valide = 1;
     int total_attendu = TAILLE_PLATEAU * TAILLE_PLATEAU;
 
@@ -118,11 +118,11 @@ static void saisir_value_base_cartes(Jeux *jeux) {
 /* Vérifie la configuration des cartes et force l'utilisateur à corriger
   tant qu'elle est invalide (soit automatiquement, soit manuellement). */
  
-void verifier_ou_corriger_value_base_cartes(Jeux *jeux) {
+void verifier_ou_corriger_valeur_base_cartes(Jeux *jeux) {
     int choix;
 
     while (!value_base_cartes_est_valide(jeux)) {
-        afficher_value_base_cartes(jeux);
+        afficher_valeur_base_cartes(jeux);
 
         choix = lire_entier(
             "\nLa configuration des cartes n'est pas valide.\n"
@@ -134,7 +134,7 @@ void verifier_ou_corriger_value_base_cartes(Jeux *jeux) {
         );
 
         if (choix == 1) {
-            initialiser_value_base_cartes(jeux);
+            initier_valeur_base_carte(jeux);
             printf(VERT "Les valeurs officielles ont ete restaurees.\n" RESET);
         } else {
             saisir_value_base_cartes(jeux);
@@ -144,10 +144,10 @@ void verifier_ou_corriger_value_base_cartes(Jeux *jeux) {
 
 /* Fonction principale de configuration des cartes (initialise les valeurs officielles,
   propose modification, vérifie et corrige, affiche la configuration finale) */
-void configurer_value_base_cartes(Jeux *jeux) {
+void configurer_valeur_base_cartes(Jeux *jeux) {
     int choix;
 
-    initialiser_value_base_cartes(jeux);
+    initier_valeur_base_carte(jeux);
 
     choix = lire_entier(
         "\nConfiguration des cartes :\n"
@@ -162,6 +162,6 @@ void configurer_value_base_cartes(Jeux *jeux) {
         saisir_value_base_cartes(jeux);
     }
 
-    verifier_ou_corriger_value_base_cartes(jeux);
-    afficher_value_base_cartes(jeux);
+    verifier_ou_corriger_valeur_base_cartes(jeux);
+    afficher_valeur_base_cartes(jeux);
 }

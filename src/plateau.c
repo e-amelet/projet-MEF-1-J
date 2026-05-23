@@ -29,7 +29,7 @@ void initier_plateau(Jeux *jeux) {
     int k;
 
     /* Vérifie ou corrige la configuration des cartes */
-    verifier_ou_corriger_value_base_cartes(jeux);
+    verifier_ou_corriger_valeur_base_cartes(jeux);
 
     /* Remplissage du tableau de cases selon les valeurs définies */
     for (type = BASILIC; type <= ANTIQUE_VOLEUR; type++) {

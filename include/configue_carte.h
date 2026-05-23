@@ -3,11 +3,11 @@
 
 #include "jeu.h"
 /*initialisation des fonctions du testeurs.*/
-void initialiser_value_base_cartes(Jeux *jeux);
-void configurer_value_base_cartes(Jeux *jeux);
-void verifier_ou_corriger_value_base_cartes(Jeux *jeux);
+void initier_valeur_base_carte(Jeux *jeux);
+void configurer_valeur_base_cartes(Jeux *jeux);
+void verifier_ou_corriger_valeur_base_cartes(Jeux *jeux);
 
-int total_value_base_cartes(const Jeux *jeux);
-void afficher_value_base_cartes(const Jeux *jeux);
+int total_valeur_base_cartes(const Jeux *jeux);
+void afficher_valeur_base_cartes(const Jeux *jeux);
 
 #endif

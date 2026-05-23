@@ -212,7 +212,7 @@ void init_joueurs(Jeux *jeux) {
         respawn_joueur(&jeux->joueurs[i]);
     }
 
-    configurer_value_base_cartes(jeux);
+    configurer_valeur_base_cartes(jeux);
 }
 
 /* Propose une option après une partie (rejouer ou retourner au menu)*/
