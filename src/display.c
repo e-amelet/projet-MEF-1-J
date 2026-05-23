@@ -131,19 +131,24 @@ void ecrire_plateau(const Jeux *jeux, const Joueur *joueur, int tout_montrer) {
     int c;
 
     printf(GRAS "\nPlateau :\n" RESET);
-    printf("     0    1    2    3    4\n");
+
+    printf("    ");
+    for (c = 0; c < TAILLE_PLATEAU; c++) {
+        printf(" %d  ", c);
+    }
+    printf("\n");
 
     for (r = 0; r < TAILLE_PLATEAU; r++) {
         printf("%d  ", r);
 
         for (c = 0; c < TAILLE_PLATEAU; c++) {
             if (joueur->pos.ligne == r && joueur->pos.col == c) {
-                printf(CYAN " 🧍 " RESET);
+                printf(CYAN "[🧍]" RESET);
             } else if (tout_montrer || jeux->plateau[r][c].revele) {
                 TypeCase type = jeux->plateau[r][c].type;
-                printf("%s %s " RESET, couleur_case(type), code_case(type));
+                printf("%s[%s]" RESET, couleur_case(type), code_case(type));
             } else {
-                printf(BLANC " ❓ " RESET);
+                printf(BLANC "[❓]" RESET);
             }
         }
 
