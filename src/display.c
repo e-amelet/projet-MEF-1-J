@@ -13,7 +13,7 @@ typedef struct {
 } InfoCase;
 
 static const Info CLASSES[] = {
-    {"Guerrier", "🛡️"},     /*associe chaque classe à un emoji pour l'affichage et se met en lien avec les enum de dans .h*/
+    {"Guerrier", "⚔️"},     /*associe chaque classe à un emoji pour l'affichage et se met en lien avec les enum de dans .h*/
     {"Ranger", "🌿"},
     {"Mage", "🧙"},
     {"Voleur", "🥷"}
