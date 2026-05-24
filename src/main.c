@@ -4,6 +4,9 @@
 #include <locale.h>
 #include "jeu.h"
 #include "utils.h"
+#ifdef _WIN32  /*pour que les emojis soit bien afficher même sur windows*/
+#include <windows.h>
+#endif
 
 /* Affiche le menu principal du jeu et récupère le choix de l'utilisateur.*/
 int menu_principal(void) {
@@ -21,6 +24,10 @@ int menu_principal(void) {
 /* Point d'entrée principal du programme*/
 int main(){
      /* Activation de la locale système (accents, emojis, etc.) */
+     #ifdef _WIN32
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    #endif
     setlocale(LC_ALL, "");
     int lancer = 1;
 
