@@ -4,7 +4,7 @@
 #include "utils.h"
 
 static const int VALEURS_OFFICIELLES[NB_TYPE_CASES] = {
-    3,  /* BASILIC */
+    4,  /* BASILIC */
     4,  /* ZOMBIE */
     4,  /* TROLL */
     4,  /* HARPIE */
